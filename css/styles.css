@@ -2452,8 +2452,9 @@ section#process.slab {
     margin-bottom: 1rem;
 }
 .vc-section-title-pill {
-    padding: 4px 16px;
-    border-radius: 12px;
+    padding: 0.08em 0.3em;
+    margin: 0 -0.3em;
+    border-radius: 10px;
 }
 .vc-section-sub {
     color: rgba(255,255,255,0.65);
@@ -2826,4 +2827,735 @@ section#process.slab {
     .vc-lb-nav { width: 40px; height: 40px; }
     .vc-lb-nav--prev { left: 0.5rem; }
     .vc-lb-nav--next { right: 0.5rem; }
+}
+
+/* =====================================================================
+   MOBILE-FIRST OPTIMIZATIONS (≤768px)
+   Designed as a native mobile experience, not a shrunk-down desktop.
+   - Header collapses to logo + CTA
+   - Floating nav becomes a compact tab bar that fits 320px screens
+   - Hero stacks vertically; bento restructured so portrait leads
+   - Process timeline: vertical stepper (replaces horizontal scroll-jack)
+   - Testimonial cards sized to ~80vw with peek of next
+   - All primary CTAs full-width with 44px+ touch targets
+   ===================================================================== */
+@media (max-width: 768px) {
+
+    /* ---------- Top header: logo + CTA only ---------- */
+    .top-header { padding: 0.85rem 0; }
+    .top-header.scrolled { padding: 0.7rem 0; }
+    .header-inner { padding: 0 18px; }
+    .header-nav { display: none; }
+    .header-logo { font-size: 1.65rem; }
+    .header-right { gap: 0; }
+    .header-cta {
+        padding: 11px 18px;
+        font-size: 0.85rem;
+        border-radius: 10px;
+    }
+
+    /* ---------- Floating bottom nav: compact tab bar ---------- */
+    .floating-nav {
+        bottom: 12px;
+        padding: 5px;
+        gap: 0;
+        max-width: calc(100vw - 24px);
+        border-radius: 100px;
+    }
+    .floating-nav a {
+        padding: 10px 13px;
+        font-size: 0.78rem;
+        letter-spacing: -0.01em;
+    }
+
+    /* ---------- HERO: vertical stack, refocused bento ---------- */
+    .hero-split {
+        grid-template-columns: 1fr !important;
+        gap: 2.25rem !important;
+        padding: 92px 1.25rem 3rem !important;
+        min-height: auto !important;
+    }
+    .hero-left {
+        gap: 1.4rem !important;
+        align-items: flex-start !important;
+        order: 1;
+    }
+    .hero-right { order: 2; }
+    .hero-eyebrow {
+        font-size: 0.75rem;
+        letter-spacing: 0.06em;
+    }
+    .hero-headline {
+        font-size: clamp(2.2rem, 9vw, 2.85rem) !important;
+        line-height: 1.05 !important;
+        letter-spacing: -0.03em !important;
+    }
+    .hero-headline br { display: none; }
+    .hero-sub {
+        font-size: 1.02rem;
+        margin-bottom: 0.25rem;
+        line-height: 1.55;
+    }
+    .hero-btns {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 0.7rem !important;
+        width: 100% !important;
+    }
+    .hero-btns .btn {
+        width: 100% !important;
+        justify-content: center !important;
+        padding: 16px 22px !important;
+        font-size: 1rem !important;
+        border-radius: 14px !important;
+    }
+    .hero-social-proof {
+        flex-wrap: wrap;
+        gap: 0.85rem;
+    }
+    .proof-face {
+        width: 32px;
+        height: 32px;
+    }
+    .proof-text {
+        font-size: 0.78rem;
+        line-height: 1.4;
+    }
+
+    /* Bento — portrait leads, supporting cards below */
+    .hero-bento {
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: clamp(280px, 70vw, 360px) 130px 160px;
+        gap: 10px;
+        height: auto;
+    }
+    .bento-tall {
+        grid-column: 1 / -1;
+        grid-row: 1;
+    }
+    .bento-stat {
+        grid-column: 1;
+        grid-row: 2;
+        padding: 1rem;
+        transform: rotate(-1.5deg);
+    }
+    .bento-img-card {
+        grid-column: 2;
+        grid-row: 2;
+    }
+    .bento-wide {
+        grid-column: 1 / -1;
+        grid-row: 3;
+    }
+    .bento-accent { display: none; }
+    .stat-number { font-size: 2.4rem; }
+    .stat-label {
+        font-size: 0.65rem;
+        letter-spacing: 0.06em;
+    }
+    .bento-badge {
+        font-size: 0.72rem;
+        padding: 5px 11px;
+        bottom: 14px;
+        left: 14px;
+    }
+    /* Hide the hand on stat — too small a card to fit it cleanly */
+    .hand-stat { display: none !important; }
+
+    /* Hero grid background — tighter cells on mobile */
+    .slab--hero { background-size: 36px 36px; }
+    .slab--hero::before { width: 280px; height: 280px; top: -80px; right: -60px; }
+    .slab--hero::after  { width: 220px; height: 220px; bottom: 20px; left: -40px; }
+
+    /* ---------- Marquee: punchy but compact ---------- */
+    .marquee-section { padding: 2.25rem 0; }
+    .marquee-content {
+        gap: 2.5rem;
+        animation-duration: 26s;
+    }
+    .marquee-item {
+        font-size: 1.45rem;
+        gap: 1rem;
+    }
+    .marquee-icon { font-size: 0.9rem; }
+
+    /* =========================================================
+       MOBILE TYPOGRAPHY HIERARCHY & SPACING
+       Goal: clear visual hierarchy on small screens.
+       Pattern (consistent across sections):
+         eyebrow  → 0.55rem → heading  → 0.55rem → subtitle
+         subtitle → 1.75rem → content
+       Heading sizes capped so they don't crowd the body text.
+       ========================================================= */
+
+    /* All section header containers — uniform bottom margin */
+    .section-header,
+    .section-intro,
+    .vc-section-header,
+    .testi-header,
+    .faq-section-header,
+    .process-header {
+        margin-bottom: 1.75rem !important;
+        max-width: 100% !important;
+    }
+
+    /* Eyebrow badge → heading: tight gap */
+    .section-header > .badge-inline,
+    .section-intro > .badge-inline,
+    .process-header > .badge-inline,
+    .vc-section-eyebrow {
+        margin-bottom: 0.55rem !important;
+        font-size: 0.7rem !important;
+        padding: 5px 12px !important;
+        letter-spacing: 0.08em !important;
+    }
+    .about-content > .badge-inline {
+        margin-bottom: 0.55rem !important;
+        font-size: 0.85rem !important;
+        padding: 7px 16px !important;
+        letter-spacing: 0.1em !important;
+    }
+
+    /* Note: <br> tags inside headings are kept on mobile — hiding them with
+       display:none collapses adjacent words (e.g. "do<br>half" → "dohalf"). */
+
+    /* Section H2 — punchy but not overwhelming on mobile */
+    .section-header h2,
+    .section-intro h2,
+    .vc-section-title,
+    .testi-main-heading {
+        font-size: 1.95rem !important;
+        line-height: 1.1 !important;
+        letter-spacing: -0.02em !important;
+        margin-bottom: 0.55rem !important;
+    }
+    .vc-section-title,
+    .testi-main-heading {
+        margin-bottom: 0.5rem !important;
+    }
+
+    /* Subtitle/description directly under heading: zero its bottom margin
+       so the section-header's margin-bottom is the only gap to content. */
+    .section-header .hero-sub,
+    .section-intro .hero-sub,
+    .vc-section-sub,
+    .testi-subtitle,
+    .faq-subtitle,
+    .process-header .hero-sub {
+        margin-bottom: 0 !important;
+        font-size: 0.94rem !important;
+        line-height: 1.5 !important;
+        max-width: 100% !important;
+    }
+
+    /* Process header — uses inline h2 styles, override */
+    .process-header h2 {
+        font-size: 1.95rem !important;
+        margin-bottom: 0.55rem !important;
+    }
+
+    /* Faq + Footer use a stacked badge + heading layout */
+    .faq-heading-wrap,
+    .footer-cta-heading-wrap {
+        margin-bottom: 0.85rem !important;
+    }
+    .faq-freq-badge,
+    .footer-freq-badge {
+        font-size: 1.6rem !important;
+        padding: 5px 18px !important;
+        margin-bottom: 0.25rem !important;
+    }
+    .faq-main-heading {
+        font-size: 1.85rem !important;
+        line-height: 1.1 !important;
+    }
+    .footer-cta-heading {
+        font-size: 2.6rem !important;
+        line-height: 1 !important;
+    }
+
+    /* About section — heading → paragraphs */
+    .about-content > .badge-inline {
+        margin-bottom: 0.55rem !important;
+    }
+    .about-content h2 {
+        font-size: 1.95rem !important;
+        line-height: 1.1 !important;
+        margin-bottom: 1rem !important;
+        letter-spacing: -0.02em !important;
+    }
+    .about-content p {
+        font-size: 0.98rem !important;
+        line-height: 1.6 !important;
+        margin-bottom: 0.85rem !important;
+    }
+    .about-content p:last-child { margin-bottom: 0 !important; }
+
+    /* Card-level heading sizes — keep distinct from section H2 */
+    .vault-title,
+    .banner-card-title,
+    .service-name-v2,
+    .testi-card-title,
+    .faq-header h4,
+    .process-step-title,
+    .vc-title {
+        font-family: var(--font-heading);
+    }
+
+    /* Tighten the gap from section-header to its grid/content */
+    .banner-grid,
+    .vault-grid,
+    .services-grid-v2,
+    .visuals-carousel,
+    .faq-container,
+    .testi-track-wrap {
+        margin-top: 0 !important;
+    }
+
+    /* Slab vertical rhythm — same on every section */
+    .slab {
+        padding: 3.5rem 1.25rem 3.25rem !important;
+    }
+    .slab--hero { padding: 0 !important; }
+    /* Banner section's "show more" + final CTA buttons — tighter */
+    #see-more-banners-container { margin-top: 2rem !important; }
+    section#banners > div[style*="text-align: center"]:last-of-type { margin-top: 2.5rem !important; }
+    section#services > div[style*="text-align: center"]:last-of-type { margin-top: 2.5rem !important; }
+
+    /* ---------- LinkedIn Banner Showcase ---------- */
+    .banner-grid {
+        grid-template-columns: 1fr;
+        gap: 1.1rem;
+        max-width: 100%;
+    }
+    .banner-card { border-radius: 18px; }
+    .banner-card-meta { padding: 1rem 1.25rem 1.25rem; }
+    .banner-card-title { font-size: 1.05rem; }
+    #see-more-banners-container { margin-top: 2.5rem !important; }
+    #see-more-banners-btn {
+        padding: 14px 20px;
+        font-size: 0.95rem;
+    }
+
+    /* ---------- Vault: compact image-led cards ---------- */
+    .vault-grid {
+        grid-template-columns: 1fr;
+        gap: 1.25rem;
+        max-width: 100%;
+    }
+    .vault-item {
+        padding: 0 !important;
+        gap: 0 !important;
+        border-radius: 20px !important;
+    }
+    .vault-thumb { border-radius: 0 !important; }
+    .vault-thumb img { aspect-ratio: 16 / 10; }
+    .vault-body { padding: 1.5rem !important; }
+    .vault-title { font-size: 1.3rem !important; line-height: 1.2; }
+    .vault-desc { font-size: 0.95rem; margin-bottom: 1rem; }
+
+    /* ---------- Visuals Carousel: image-first, swipe ---------- */
+    .visuals-carousel {
+        grid-template-columns: 1fr;
+        gap: 0.9rem;
+    }
+    .vc-arrow { display: none; }
+    .vc-stage {
+        aspect-ratio: 4 / 3;
+        border-radius: 18px;
+    }
+    .vc-expand-hint {
+        opacity: 1;
+        transform: none;
+        bottom: 12px;
+        right: 12px;
+        font-size: 0.68rem;
+        padding: 6px 11px;
+    }
+    .vc-panel {
+        min-height: auto;
+        padding: 1.5rem;
+        border-radius: 18px;
+    }
+    .vc-panel-body { margin-top: 1rem; }
+    .vc-counter { font-size: 1.7rem; }
+    .vc-counter-sep, .vc-counter-total { font-size: 1.1rem; }
+    .vc-flourish { display: none; }
+    .vc-title { font-size: 1.25rem; line-height: 1.2; }
+    .vc-desc { font-size: 0.92rem; line-height: 1.5; }
+    .vc-expand-link {
+        margin-top: 1.25rem;
+        font-size: 0.78rem;
+    }
+    /* Thumbs: horizontal swipe rail */
+    .vc-thumbs {
+        gap: 0.55rem;
+        margin-top: 1.25rem;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        justify-content: flex-start;
+        padding: 4px 1.25rem 4px;
+        margin-left: -1.25rem;
+        margin-right: -1.25rem;
+        scrollbar-width: none;
+        scroll-snap-type: x mandatory;
+    }
+    .vc-thumbs::-webkit-scrollbar { display: none; }
+    .vc-thumb {
+        width: 86px;
+        flex-shrink: 0;
+        scroll-snap-align: center;
+    }
+
+    /* ---------- Services: tight, single column ---------- */
+    .services-grid-v2 {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        max-width: 100%;
+    }
+    .service-card-v2 {
+        padding: 1.75rem 1.5rem 1.5rem;
+        min-height: auto;
+        border-radius: 24px;
+    }
+    .service-card-v2:nth-child(2) { transform: none; }
+    .service-card-v2:nth-child(2):hover { transform: translateY(-4px); }
+    .service-card-num {
+        font-size: 1.85rem;
+        top: 1.1rem;
+        right: 1.25rem;
+    }
+    .service-icon-circle {
+        width: 50px;
+        height: 50px;
+        margin-bottom: 1rem;
+    }
+    .service-icon-v2 { font-size: 1.85rem; }
+    .service-name-v2 { font-size: 1.25rem; }
+    .service-description-v2 {
+        font-size: 0.95rem;
+        margin-bottom: 1rem;
+        line-height: 1.55;
+    }
+    .service-bullets {
+        margin-bottom: 1.25rem;
+        gap: 0.4rem;
+    }
+    .service-bullets li { font-size: 0.85rem; }
+    .service-card-cta { font-size: 0.9rem; }
+
+    /* ---------- About: integrated profile + centered intro ---------- */
+    .about-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+        max-width: 100%;
+        text-align: center;
+    }
+    /* Photo becomes an editorial rounded portrait with overlaid name/title */
+    .about-grid > aside { width: 100%; }
+    .profile-card {
+        position: relative !important;
+        background: transparent !important;
+        box-shadow: none !important;
+        border: none !important;
+        padding: 0 !important;
+        max-width: 320px !important;
+        width: 70vw !important;
+        margin: 0 auto !important;
+    }
+    .profile-card:hover { transform: none !important; }
+    .profile-img-inner {
+        position: relative !important;
+        width: 100% !important;
+        height: auto !important;
+        aspect-ratio: 4 / 5 !important;
+        border-radius: 24px !important;
+        margin: 0 !important;
+        border: 4px solid #fff;
+        box-shadow: 0 18px 40px rgba(26, 10, 46, 0.14);
+        overflow: hidden;
+    }
+    .profile-img-inner img { border-radius: 0; }
+    /* Overlay name + title on the bottom of the photo */
+    .profile-img-inner::after {
+        content: '';
+        position: absolute;
+        inset: auto 0 0 0;
+        height: 45%;
+        background: linear-gradient(to top, rgba(15, 8, 30, 0.78) 10%, rgba(15, 8, 30, 0.35) 55%, transparent);
+        pointer-events: none;
+    }
+    .profile-meta {
+        position: absolute !important;
+        left: 0; right: 0; bottom: 0;
+        padding: 0 1.1rem 1rem !important;
+        text-align: left !important;
+        z-index: 2;
+    }
+    .profile-meta h3 {
+        font-size: 1.15rem !important;
+        font-family: var(--font-heading);
+        color: #fff !important;
+        margin: 0 0 0.1rem !important;
+        text-shadow: 0 2px 12px rgba(0,0,0,0.3);
+    }
+    .profile-meta p {
+        font-size: 0.78rem !important;
+        color: rgba(255,255,255,0.85) !important;
+        opacity: 1 !important;
+        margin: 0 !important;
+        letter-spacing: 0.02em;
+    }
+
+    /* Content: centered headline, left-aligned body for readability */
+    .about-content {
+        text-align: center !important;
+    }
+    .about-content > .badge-inline {
+        margin: 0 auto 0.55rem !important;
+        display: inline-block !important;
+    }
+    .about-content h2 {
+        font-size: 1.95rem !important;
+        line-height: 1.1 !important;
+        letter-spacing: -0.02em !important;
+        margin-bottom: 1.25rem !important;
+        text-align: center !important;
+    }
+    .about-content p {
+        font-size: 0.98rem !important;
+        line-height: 1.65 !important;
+        margin-bottom: 0.85rem !important;
+        text-align: left !important;
+    }
+    .about-content p:last-child { margin-bottom: 0 !important; }
+
+    /* ---------- Process Timeline: VERTICAL stepper ---------- */
+    .process-wrapper { height: auto !important; }
+    .process-stage {
+        position: relative !important;
+        top: auto !important;
+        height: auto !important;
+        padding: 0 !important;
+        overflow: visible !important;
+    }
+    .process-scroll {
+        width: 100% !important;
+        margin-left: 0 !important;
+        overflow: visible !important;
+        display: block !important;
+    }
+    .process-scroll-track {
+        flex-direction: column;
+        gap: 0.85rem;
+        padding: 1.5rem 0;
+        align-items: stretch;
+        position: relative;
+        isolation: isolate;
+    }
+    /* Dashed vertical connector — visible only in gaps between cards */
+    .process-scroll-track::before {
+        content: '';
+        position: absolute;
+        left: 31px;
+        top: 1.5rem;
+        bottom: 1.5rem;
+        width: 2px;
+        background-image: linear-gradient(to bottom, rgba(139, 92, 246, 0.5) 50%, transparent 50%);
+        background-size: 2px 8px;
+        background-repeat: repeat-y;
+        z-index: 0;
+    }
+    .process-rope { display: none; }
+    .process-step-card {
+        width: 100% !important;
+        min-height: auto !important;
+        padding: 1.15rem 1.25rem 1.15rem 4.25rem !important;
+        border-radius: 18px !important;
+        transform: none !important;
+        overflow: hidden !important;
+    }
+    .process-step-card--first { isolation: isolate; }
+    .process-step-icon {
+        position: absolute !important;
+        left: 11px !important;
+        top: 50% !important;
+        transform: translateY(-50%) !important;
+        width: 42px !important;
+        height: 42px !important;
+        margin: 0 !important;
+        z-index: 2 !important;
+        box-shadow: 0 0 0 4px var(--bg-cream);
+    }
+    /* Light-section variant gets cream halo so it punches over the dashed line */
+    .slab--light .process-step-icon { box-shadow: 0 0 0 4px #fff; }
+    .process-step-watermark {
+        bottom: -8px;
+        right: 8px;
+        font-size: 3rem;
+    }
+    .process-step-label {
+        font-size: 0.62rem;
+        margin-bottom: 0.25rem;
+    }
+    .process-step-title {
+        font-size: 1.05rem;
+        margin-bottom: 0.2rem;
+        line-height: 1.25;
+    }
+    .process-step-desc {
+        font-size: 0.85rem;
+        line-height: 1.45;
+    }
+    .process-hand { display: none !important; }
+    .process-progress { display: none !important; }
+
+    /* ---------- Testimonials: phone-fit cards ---------- */
+    #testimonials.slab {
+        padding-top: 4rem !important;
+        padding-bottom: 4.5rem !important;
+    }
+    .testi-main-heading {
+        font-size: clamp(2rem, 8.5vw, 2.6rem);
+        line-height: 1.15;
+    }
+    .testi-subtitle { font-size: 0.95rem; }
+    .testi-track {
+        gap: 1rem;
+        animation-duration: 38s;
+        padding: 1.25rem 0;
+    }
+    .testi-card {
+        width: 80vw;
+        max-width: 320px;
+        padding: 2rem 1.5rem 1.75rem;
+        border-radius: 24px;
+        gap: 1rem;
+    }
+    .testi-card:nth-child(even),
+    .testi-card:nth-child(3n) { transform: none; }
+    .testi-qmark { font-size: 3rem; margin-bottom: 0; }
+    .testi-card-title { font-size: 1.1rem; line-height: 1.3; }
+    .testi-card-body { font-size: 0.88rem; }
+    .testi-author-row {
+        padding-top: 1.25rem;
+        gap: 0.75rem;
+    }
+    .testi-cta-btn {
+        padding: 13px 26px;
+        font-size: 0.9rem;
+        margin-top: 1.25rem;
+    }
+
+    /* ---------- FAQ: tighter, no h4 wrap awkwardness ---------- */
+    .faq-heading-wrap { margin-bottom: 1.25rem; }
+    .faq-freq-badge {
+        font-size: clamp(1.7rem, 6.5vw, 2.2rem);
+        padding: 6px 22px;
+    }
+    .faq-main-heading { font-size: clamp(1.9rem, 7vw, 2.4rem); }
+    .faq-subtitle { font-size: 0.95rem; }
+    .faq-container { gap: 0.75rem; }
+    .faq-item { border-radius: 16px; border-width: 1.5px; }
+    .faq-header {
+        padding: 1.15rem 1.15rem;
+        gap: 0.85rem;
+    }
+    .faq-num {
+        width: 34px;
+        height: 34px;
+        font-size: 0.7rem;
+    }
+    .faq-header h4 {
+        font-size: 1rem;
+        line-height: 1.3;
+    }
+    .faq-icon {
+        width: 30px;
+        height: 30px;
+    }
+    .faq-icon svg { width: 13px; height: 13px; }
+    .faq-content {
+        padding: 0 1.15rem;
+    }
+    .faq-item.active .faq-content {
+        padding-bottom: 1.15rem;
+    }
+    .faq-content p {
+        font-size: 0.92rem;
+        line-height: 1.6;
+    }
+
+    /* ---------- Footer CTA: full-width button, stacked nav ---------- */
+    .footer-cta-inner { gap: 3rem; }
+    .footer-cta-heading-wrap { margin-bottom: 1.25rem; }
+    .footer-freq-badge {
+        font-size: clamp(1.7rem, 6.5vw, 2.2rem);
+        padding: 6px 22px;
+    }
+    .footer-cta-heading {
+        font-size: clamp(2.5rem, 11vw, 3.75rem);
+    }
+    .footer-cta-sub {
+        font-size: 0.98rem;
+        margin-bottom: 1.75rem;
+        line-height: 1.6;
+    }
+    .footer-cta-btn {
+        padding: 16px 28px;
+        font-size: 0.95rem;
+        width: 100%;
+        max-width: 320px;
+        justify-content: center;
+        border-radius: 16px;
+    }
+    .footer-bottom-row {
+        flex-direction: column;
+        text-align: center;
+        gap: 1.25rem;
+        padding-top: 2rem;
+    }
+    .footer-nav-links {
+        gap: 1.1rem;
+        font-size: 0.78rem;
+    }
+    .footer-nav-links a { font-size: 0.78rem; }
+    .footer-copy { font-size: 0.72rem; }
+    /* Hand-cta repositioned so it doesn't fight the full-width button */
+    .hand-cta {
+        bottom: auto !important;
+        top: -25px !important;
+        right: 8px !important;
+        left: auto !important;
+        width: 75px !important;
+    }
+
+    /* ---------- Add safe-area room for floating nav at bottom ---------- */
+    section#contact.slab {
+        padding-bottom: 6.5rem !important;
+    }
+}
+
+/* ============================================
+   Very small phones (≤380px) — extra tightening
+   ============================================ */
+@media (max-width: 380px) {
+    .header-logo { font-size: 1.5rem; }
+    .header-cta {
+        padding: 9px 14px;
+        font-size: 0.78rem;
+    }
+    .floating-nav a {
+        padding: 9px 10px;
+        font-size: 0.72rem;
+    }
+    .hero-headline {
+        font-size: clamp(1.95rem, 9vw, 2.4rem) !important;
+    }
+    .hero-bento {
+        grid-template-rows: clamp(260px, 72vw, 320px) 120px 140px;
+    }
+    .stat-number { font-size: 2rem; }
+    .testi-card { width: 84vw; }
+    .marquee-item { font-size: 1.25rem; }
 }

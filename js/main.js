@@ -282,7 +282,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 desc: 'Covers that make your expertise look as serious as it actually is.'
             },
             {
-                title: 'Flyers & Brand Collabs',
+                title: 'Flyers and Posters',
                 badge: 'Campaigns',
                 cls: 'badge--blue',
                 desc: 'Campaign visuals that blend story with serious brand weight.'
