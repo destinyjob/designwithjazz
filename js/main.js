@@ -226,6 +226,104 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // ============================================================
+    // REVIEWS: avatar list + crossfading quote, auto-rotate w/ pause
+    // ============================================================
+    const reviewsWrap = document.getElementById('reviews-wrap');
+    if (reviewsWrap) {
+        const list      = reviewsWrap.querySelector('#reviews-list');
+        const items     = Array.from(list.querySelectorAll('.review-person'));
+        const quoteBox  = reviewsWrap.querySelector('#reviews-quote');
+        const quoteText = reviewsWrap.querySelector('#reviews-quote-text');
+        const nameEl    = reviewsWrap.querySelector('#reviews-quote-name');
+        const roleEl    = reviewsWrap.querySelector('#reviews-quote-role');
+        const footerEl  = reviewsWrap.querySelector('.reviews-quote-footer');
+        const counterEl = reviewsWrap.querySelector('#reviews-counter-current');
+        const totalEl   = reviewsWrap.querySelector('#reviews-counter-total');
+
+        if (totalEl) totalEl.textContent = String(items.length).padStart(2, '0');
+
+        let active = 0;
+        let autoTimer = null;
+        const ROTATE_MS = 6500;
+        const SWAP_MS   = 350;
+
+        const setActive = (next, { fromUser = false } = {}) => {
+            if (next === active) return;
+            const target = items[next];
+            if (!target) return;
+
+            // crossfade out
+            quoteBox.classList.add('is-swapping');
+            footerEl.classList.add('is-swapping');
+
+            setTimeout(() => {
+                // swap content
+                quoteText.textContent = target.dataset.quote || '';
+                nameEl.textContent    = target.dataset.name  || '';
+                roleEl.textContent    = target.dataset.role  || '';
+                if (counterEl) counterEl.textContent = String(next + 1).padStart(2, '0');
+
+                // toggle active class & scroll into view on mobile
+                items[active].classList.remove('is-active');
+                target.classList.add('is-active');
+                active = next;
+
+                // mobile: scroll active row into the visible scroll-snap viewport
+                if (matchMedia('(max-width: 880px)').matches) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+                }
+
+                // crossfade in
+                requestAnimationFrame(() => {
+                    quoteBox.classList.remove('is-swapping');
+                    footerEl.classList.remove('is-swapping');
+                });
+            }, SWAP_MS);
+
+            if (fromUser) restartAuto();
+        };
+
+        const tickAuto = () => setActive((active + 1) % items.length);
+
+        const startAuto = () => {
+            stopAuto();
+            autoTimer = setInterval(tickAuto, ROTATE_MS);
+        };
+        const stopAuto = () => {
+            if (autoTimer) { clearInterval(autoTimer); autoTimer = null; }
+        };
+        const restartAuto = () => { stopAuto(); startAuto(); };
+
+        items.forEach((el, i) => {
+            el.addEventListener('click', () => setActive(i, { fromUser: true }));
+            el.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    setActive(i, { fromUser: true });
+                }
+            });
+            el.setAttribute('tabindex', '0');
+            el.setAttribute('role', 'button');
+            el.setAttribute('aria-label', `Show testimonial from ${el.dataset.name}`);
+        });
+
+        // pause on hover / touch / focus
+        reviewsWrap.addEventListener('mouseenter', stopAuto);
+        reviewsWrap.addEventListener('mouseleave', startAuto);
+        reviewsWrap.addEventListener('focusin',  stopAuto);
+        reviewsWrap.addEventListener('focusout', startAuto);
+
+        // only auto-rotate when in view (saves CPU on long pages)
+        const rotateObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) startAuto();
+                else stopAuto();
+            });
+        }, { threshold: 0.25 });
+        rotateObserver.observe(reviewsWrap);
+    }
+
     // FAQ Accordion Logic
     const faqHeaders = document.querySelectorAll('.faq-header');
     faqHeaders.forEach(header => {
@@ -267,25 +365,25 @@ document.addEventListener('DOMContentLoaded', () => {
                 title: 'LinkedIn Profile Redesign',
                 badge: 'Optimization',
                 cls: 'badge--purple',
-                desc: 'Profile overhauls that stop being "liked" and start getting you paid.'
+                desc: 'Every word crafted to speak directly to your ideal client. Positioning, SEO, visuals — all of it working together so premium clients stop bouncing and start reaching out.'
             },
             {
                 title: 'Scroll-Stopping Carousels',
                 badge: 'Content',
                 cls: 'badge--coral',
-                desc: 'Carousels built to be saved and shared, not scrolled past.'
+                desc: 'Content designed to live in people\'s saved folders, not disappear into the algorithm. Readable, on-brand, and built to get shared.'
             },
             {
                 title: 'Authority Book Covers',
                 badge: 'Canva',
                 cls: 'badge--gold',
-                desc: 'Covers that make your expertise look as serious as it actually is.'
+                desc: 'Your knowledge is serious. Your cover should look like it. A quick cover system so your expertise reads as the real deal from the first glance.'
             },
             {
                 title: 'Flyers and Posters',
                 badge: 'Campaigns',
                 cls: 'badge--blue',
-                desc: 'Campaign visuals that blend story with serious brand weight.'
+                desc: 'On-brand campaign visuals that make people think "this person is the real deal" — even before they read a single word of your copy.'
             }
         ];
         const badgeVariants = ['badge--purple', 'badge--coral', 'badge--gold', 'badge--blue'];
