@@ -1543,6 +1543,123 @@ h2 {
     .form-row--split { grid-template-columns: 1fr; gap: 1.25rem; }
 }
 
+/* === Contact form modal =============================================
+   Triggered by [data-open-modal="contact"] or by any anchor whose href
+   is "#contact". Animated in/out via the .is-open class on .modal.
+   ================================================================== */
+.modal {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease, visibility 0s linear 0.25s;
+}
+.modal.is-open {
+    visibility: visible;
+    opacity: 1;
+    pointer-events: auto;
+    transition: opacity 0.25s ease;
+}
+
+.modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(20, 8, 40, 0.72);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+}
+
+.modal-panel {
+    position: relative;
+    width: 100%;
+    max-width: 620px;
+    max-height: calc(100vh - 3rem);
+    overflow-y: auto;
+    background: #FFFBF5;
+    border-radius: 28px;
+    padding: 2.75rem 2.25rem 2.25rem;
+    box-shadow: 0 40px 100px rgba(0, 0, 0, 0.45);
+    transform: translateY(20px) scale(0.97);
+    transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.modal.is-open .modal-panel { transform: translateY(0) scale(1); }
+
+.modal-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    width: 38px;
+    height: 38px;
+    border: none;
+    border-radius: 50%;
+    background: rgba(26, 10, 46, 0.06);
+    color: var(--text-main);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+.modal-close:hover {
+    background: var(--primary-purple);
+    color: #fff;
+    transform: rotate(90deg);
+}
+
+.modal-header {
+    text-align: center;
+    margin-bottom: 1.75rem;
+}
+.modal-eyebrow {
+    display: inline-block;
+    font-family: var(--font-labels);
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--primary-purple);
+    margin-bottom: 0.5rem;
+}
+.modal-title {
+    font-family: var(--font-heading);
+    font-size: clamp(1.5rem, 3vw, 1.95rem);
+    font-weight: 800;
+    line-height: 1.2;
+    margin: 0 0 0.5rem;
+    color: var(--text-main);
+}
+.modal-sub {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    margin: 0;
+    line-height: 1.5;
+}
+
+/* Form inside modal — drop the outer card chrome since the modal already provides it */
+.contact-form--modal {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    padding: 0;
+    margin: 0;
+    max-width: none;
+}
+
+/* Lock body scroll while modal is open (toggled by JS) */
+body.modal-open { overflow: hidden; }
+
+@media (max-width: 640px) {
+    .modal { padding: 1rem; }
+    .modal-panel { padding: 2.5rem 1.25rem 1.5rem; border-radius: 22px; }
+    .modal-title { font-size: 1.4rem; }
+}
+
 .footer-bottom-row {
     width: 100%;
     display: flex;
@@ -1861,10 +1978,20 @@ h2 {
     border-radius: 50%;
     border: 2px solid white;
     object-fit: cover;
-    margin-left: -10px;
+    margin-left: -12px;
     background: var(--bg-alt);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    transition: transform 0.2s ease, z-index 0s;
+    position: relative;
 }
 .proof-face:first-child { margin-left: 0; }
+.proof-face:nth-child(1) { z-index: 6; }
+.proof-face:nth-child(2) { z-index: 5; }
+.proof-face:nth-child(3) { z-index: 4; }
+.proof-face:nth-child(4) { z-index: 3; }
+.proof-face:nth-child(5) { z-index: 2; }
+.proof-face:nth-child(6) { z-index: 1; }
+.proof-face:hover { transform: translateY(-2px) scale(1.08); z-index: 10; }
 
 .proof-text {
     font-family: var(--font-labels);

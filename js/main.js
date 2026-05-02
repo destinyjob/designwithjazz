@@ -1,4 +1,55 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // ============================================================
+    // CONTACT MODAL — opened by [data-open-modal="contact"] OR by
+    // any anchor whose href is "#contact". ESC and backdrop click
+    // close it. Body scroll is locked while open.
+    // ============================================================
+    const contactModal = document.getElementById('contact-modal');
+    if (contactModal) {
+        let lastTrigger = null;
+
+        const openContactModal = (trigger) => {
+            lastTrigger = trigger || document.activeElement;
+            contactModal.classList.add('is-open');
+            contactModal.setAttribute('aria-hidden', 'false');
+            document.body.classList.add('modal-open');
+            // focus the first input for instant typing
+            requestAnimationFrame(() => {
+                const firstInput = contactModal.querySelector('input[name="name"]');
+                if (firstInput) firstInput.focus();
+            });
+        };
+
+        const closeContactModal = () => {
+            contactModal.classList.remove('is-open');
+            contactModal.setAttribute('aria-hidden', 'true');
+            document.body.classList.remove('modal-open');
+            // return focus to whatever opened it
+            if (lastTrigger && typeof lastTrigger.focus === 'function') lastTrigger.focus();
+        };
+
+        // Intercept all #contact anchor clicks AND data-open-modal triggers
+        document.addEventListener('click', (e) => {
+            const trigger = e.target.closest('[data-open-modal="contact"], a[href="#contact"]');
+            if (trigger) {
+                e.preventDefault();
+                openContactModal(trigger);
+                return;
+            }
+            // Close handlers
+            if (e.target.closest('[data-close-modal]')) {
+                closeContactModal();
+            }
+        });
+
+        // ESC closes
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && contactModal.classList.contains('is-open')) {
+                closeContactModal();
+            }
+        });
+    }
+
     // Scroll Reveal Observer with Stagger Support
     const observerOptions = {
         threshold: 0.15,
@@ -90,15 +141,15 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Smooth Scroll for anchor links
+    // Smooth Scroll for anchor links (skip #contact — that opens the modal)
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
+            const href = this.getAttribute('href');
+            if (href === '#contact') return; // modal handler takes over
             e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
+            const target = document.querySelector(href);
             if (target) {
-                target.scrollIntoView({
-                    behavior: 'smooth'
-                });
+                target.scrollIntoView({ behavior: 'smooth' });
             }
         });
     });
