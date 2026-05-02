@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jasmine Gathoga | The Canva Girl</title>
     <meta name="description" content="LinkedIn brand strategy + design for consultants and service providers. Stop being 'liked', start getting paid. #1 Branding & Positioning on LinkedIn Kenya.">
-    <link rel="stylesheet" href="css/styles.css?v=wheel3">
+    <link rel="stylesheet" href="css/styles.css?v=form1">
 </head>
 <body>
 
@@ -57,9 +57,9 @@
                     </div>
                     <div class="hero-social-proof">
                         <div class="proof-faces">
-                            <img src="images/portrait.png" alt="Client" class="proof-face">
-                            <img src="images/portrait.png" alt="Client" class="proof-face">
-                            <img src="images/portrait.png" alt="Client" class="proof-face">
+                            <img src="images/testimonials/aderonke-filani.jpeg" alt="Aderonke Filani" class="proof-face">
+                            <img src="images/testimonials/blossom-affia.jpeg" alt="Blossom Affia" class="proof-face">
+                            <img src="images/testimonials/cheryl-patterson.jpeg" alt="Cheryl Patterson" class="proof-face">
                         </div>
                         <span class="proof-text"><strong>100+</strong> profiles designed · #1 Kenya, #40 worldwide</span>
                     </div>
@@ -932,8 +932,53 @@
                     <img src="images/illustrations/Untitled%20design%20(22).png"
                          class="hand-accent hand-cta"
                          alt="" aria-hidden="true">
-                    <a href="mailto:hello@thatcanvagirl.com" class="btn footer-cta-btn">DM me "STRATEGY" ↗</a>
+                    <a href="mailto:hello@thatcanvagirl.com" class="btn footer-cta-btn">Or just DM me "STRATEGY" ↗</a>
                 </div>
+
+                <!-- Contact form (FormSubmit handles delivery — no backend needed) -->
+                <form class="contact-form reveal-child"
+                      action="https://formsubmit.co/hello@thatcanvagirl.com"
+                      method="POST">
+                    <!-- FormSubmit config -->
+                    <input type="hidden" name="_subject" value="New inquiry from thatcanvagirl.com">
+                    <input type="hidden" name="_template" value="table">
+                    <input type="hidden" name="_captcha" value="true">
+                    <!-- Honeypot anti-spam (real users won't fill this) -->
+                    <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off">
+
+                    <div class="form-row form-row--split">
+                        <label class="form-field">
+                            <span class="form-label">Your name</span>
+                            <input type="text" name="name" required placeholder="Jasmine Gathoga" autocomplete="name">
+                        </label>
+                        <label class="form-field">
+                            <span class="form-label">Your email</span>
+                            <input type="email" name="email" required placeholder="hello@yourdomain.com" autocomplete="email">
+                        </label>
+                    </div>
+
+                    <label class="form-field">
+                        <span class="form-label">What do you need?</span>
+                        <select name="service" required>
+                            <option value="">Pick one</option>
+                            <option value="LinkedIn Profile Optimization & Design">LinkedIn Profile Optimization & Design</option>
+                            <option value="LinkedIn Brand Strategy Call">LinkedIn Brand Strategy Call</option>
+                            <option value="Graphics & Carousels">Graphics & Carousels</option>
+                            <option value="Brand Collaboration / Sponsorship">Brand Collaboration / Sponsorship</option>
+                            <option value="Canva Coaching Cohort">Canva Coaching Cohort</option>
+                            <option value="Just saying hi">Just saying hi 👋</option>
+                        </select>
+                    </label>
+
+                    <label class="form-field">
+                        <span class="form-label">Tell me about your goal</span>
+                        <textarea name="message" rows="5" required placeholder="What are you trying to make happen on LinkedIn? Where are you stuck right now?"></textarea>
+                    </label>
+
+                    <button type="submit" class="btn btn--primary btn--xl form-submit">Send it ↗</button>
+
+                    <p class="form-fineprint">I read every message and reply within 1–2 business days. Your details stay between us.</p>
+                </form>
 
                 <!-- Footer Nav Row -->
                 <div class="footer-bottom-row reveal-child">
