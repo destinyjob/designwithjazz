@@ -552,6 +552,24 @@ h2 {
     z-index: 5;
 }
 
+/* Decorative coral half-moon shape behind the card (left side, like reference) */
+.reviews-wrap::before {
+    content: '';
+    position: absolute;
+    left: -200px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 440px;
+    height: 440px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 65% 50%, var(--accent-coral) 0%, #FF8A6A 55%, transparent 75%);
+    z-index: 0;
+    opacity: 0.85;
+    filter: blur(0.5px);
+    pointer-events: none;
+}
+.reviews-wrap > .reviews-card { position: relative; z-index: 1; }
+
 .reviews-card {
     background: #FFFBF5;
     border: 1.5px solid rgba(26, 10, 46, 0.08);
@@ -702,6 +720,27 @@ h2 {
     text-overflow: ellipsis;
 }
 
+/* Rating-style subtitle (★ Verified · 2025) — matches reference's "4.9 on 29 Aug 2017" feel */
+.review-person-rating {
+    display: inline-flex !important;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.7rem !important;
+    font-weight: 600;
+    color: var(--primary-purple) !important;
+    letter-spacing: 0.02em;
+    overflow: visible !important;
+}
+.review-person-rating .star {
+    color: #F5B400;
+    font-size: 0.85rem;
+    line-height: 1;
+    display: inline-block;
+    transform: translateY(-1px);
+}
+.slab--dark #testimonials .review-person-rating { color: var(--primary-purple) !important; }
+.slab--dark #testimonials .review-person-rating .star { color: #F5B400 !important; }
+
 /* Override .slab--dark { color: #FFF !important } leaks into the cream card */
 .slab--dark #testimonials .reviews-card,
 .slab--dark #testimonials .reviews-card * {
@@ -750,13 +789,25 @@ h2 {
 }
 
 .reviews-quote p {
-    font-family: var(--font-heading);
+    font-family: 'Bricolage Grotesque', Georgia, serif;
     font-size: clamp(1.05rem, 1.3vw, 1.25rem);
-    line-height: 1.55;
+    line-height: 1.7;
     color: var(--text-main);
-    font-weight: 500;
+    font-weight: 400;
     margin: 0;
     font-style: italic;
+}
+
+/* Drop cap on the first letter — matches reference's serif "O" */
+.reviews-quote p::first-letter {
+    font-family: 'Bricolage Grotesque', Georgia, serif;
+    font-size: 3.4em;
+    line-height: 0.9;
+    float: left;
+    padding: 4px 10px 0 0;
+    color: var(--primary-purple);
+    font-style: normal;
+    font-weight: 700;
 }
 
 .slab--dark #testimonials .reviews-quote p { color: var(--text-main); }
