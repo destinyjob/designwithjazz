@@ -528,6 +528,7 @@ h2 {
 .testi-cta-btn {
     display: inline-flex;
     align-items: center;
+    margin-top: 1.75rem;
     background: #fff;
     color: var(--text-main);
     font-family: var(--font-heading);
