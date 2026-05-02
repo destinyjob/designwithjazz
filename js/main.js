@@ -245,8 +245,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         let active = 0;
         let autoTimer = null;
-        const ROTATE_MS = 6500;
-        const SWAP_MS   = 350;
+        const ROTATE_MS = 4000;  // faster cycling
+        const SWAP_MS   = 220;   // tighter quote crossfade
 
         // === Wheel position assignment ============================
         // Given a new active index, set position classes on every item:
