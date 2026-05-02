@@ -248,33 +248,51 @@ document.addEventListener('DOMContentLoaded', () => {
         const ROTATE_MS = 6500;
         const SWAP_MS   = 350;
 
+        // === Wheel position assignment ============================
+        // Given a new active index, set position classes on every item:
+        //   is-leaving  → was prev last tick, now exiting upward
+        //   is-prev     → top visible slot
+        //   is-active   → middle visible slot (the one being quoted)
+        //   is-next     → bottom visible slot
+        //   (no class)  → parked off-screen below, ready to enter
+        const N = items.length;
+        const POS_CLASSES = ['is-leaving', 'is-prev', 'is-active', 'is-next'];
+
+        const applyWheelPositions = (centerIdx) => {
+            items.forEach((el, i) => {
+                el.classList.remove(...POS_CLASSES);
+                // signed offset from center, normalized to (-N/2 .. N/2]
+                let offset = i - centerIdx;
+                if (offset > N / 2)  offset -= N;
+                if (offset < -N / 2) offset += N;
+                if (offset === -2) el.classList.add('is-leaving');
+                else if (offset === -1) el.classList.add('is-prev');
+                else if (offset ===  0) el.classList.add('is-active');
+                else if (offset ===  1) el.classList.add('is-next');
+                // others: no class → CSS default (off-screen, opacity 0)
+            });
+        };
+
         const setActive = (next, { fromUser = false } = {}) => {
             if (next === active) return;
             const target = items[next];
             if (!target) return;
 
-            // crossfade out
+            // crossfade quote text/footer
             quoteBox.classList.add('is-swapping');
             footerEl.classList.add('is-swapping');
 
+            // wheel positions update immediately (transitions handle smoothness)
+            applyWheelPositions(next);
+            active = next;
+
             setTimeout(() => {
-                // swap content
+                // swap text content of the right-side quote
                 quoteText.textContent = target.dataset.quote || '';
                 nameEl.textContent    = target.dataset.name  || '';
                 roleEl.textContent    = target.dataset.role  || '';
                 if (counterEl) counterEl.textContent = String(next + 1).padStart(2, '0');
 
-                // toggle active class & scroll into view on mobile
-                items[active].classList.remove('is-active');
-                target.classList.add('is-active');
-                active = next;
-
-                // mobile: scroll active row into the visible scroll-snap viewport
-                if (matchMedia('(max-width: 880px)').matches) {
-                    target.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-                }
-
-                // crossfade in
                 requestAnimationFrame(() => {
                     quoteBox.classList.remove('is-swapping');
                     footerEl.classList.remove('is-swapping');
@@ -283,6 +301,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (fromUser) restartAuto();
         };
+
+        // initial assignment so the 3 visible slots start in the right places
+        applyWheelPositions(active);
 
         const tickAuto = () => setActive((active + 1) % items.length);
 
