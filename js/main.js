@@ -7,13 +7,30 @@ document.addEventListener('DOMContentLoaded', () => {
     const contactModal = document.getElementById('contact-modal');
     if (contactModal) {
         let lastTrigger = null;
+        const form           = contactModal.querySelector('.contact-form');
+        const formSteps      = contactModal.querySelectorAll('[data-modal-step="form"]');
+        const successSteps   = contactModal.querySelectorAll('[data-modal-step="success"]');
+        const successName    = contactModal.querySelector('#success-name');
+        const successCalendly = contactModal.querySelector('#success-calendly');
+        const submitBtn      = form?.querySelector('button[type="submit"]');
+        const CALENDLY_BASE  = 'https://calendly.com/jasminegathoga/linkedin-profile-audit';
+
+        const showStep = (step) => {
+            formSteps.forEach(el => { el.hidden = step !== 'form'; });
+            successSteps.forEach(el => { el.hidden = step !== 'success'; });
+        };
 
         const openContactModal = (trigger) => {
             lastTrigger = trigger || document.activeElement;
+            showStep('form');                       // always reset to form view on open
+            if (form) form.reset();
+            if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Send it ↗';
+            }
             contactModal.classList.add('is-open');
             contactModal.setAttribute('aria-hidden', 'false');
             document.body.classList.add('modal-open');
-            // focus the first input for instant typing
             requestAnimationFrame(() => {
                 const firstInput = contactModal.querySelector('input[name="name"]');
                 if (firstInput) firstInput.focus();
@@ -24,9 +41,60 @@ document.addEventListener('DOMContentLoaded', () => {
             contactModal.classList.remove('is-open');
             contactModal.setAttribute('aria-hidden', 'true');
             document.body.classList.remove('modal-open');
-            // return focus to whatever opened it
             if (lastTrigger && typeof lastTrigger.focus === 'function') lastTrigger.focus();
         };
+
+        // Build a prefilled Calendly URL from the form data
+        const buildCalendlyURL = (data) => {
+            const params = new URLSearchParams();
+            const fullName = (data.name || '').trim();
+            const email    = (data.email || '').trim();
+            if (fullName) params.set('name', fullName);
+            if (email)    params.set('email', email);
+            // Pass the service + message as Calendly custom answers (a1, a2)
+            // — these only show up if Jasmine has those questions set up in
+            // her Calendly event, otherwise they're silently ignored.
+            if (data.service) params.set('a1', data.service);
+            if (data.message) params.set('a2', data.message.slice(0, 500));
+            return CALENDLY_BASE + '?' + params.toString();
+        };
+
+        // Intercept form submission — send via FormSubmit AJAX, then show success state
+        if (form) {
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                if (!submitBtn) return;
+
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Sending…';
+
+                const formData = new FormData(form);
+                const dataObj = Object.fromEntries(formData.entries());
+
+                try {
+                    const res = await fetch(form.action, {
+                        method: 'POST',
+                        headers: { 'Accept': 'application/json' },
+                        body: formData
+                    });
+                    const json = await res.json().catch(() => ({}));
+                    if (!res.ok || json.success === 'false') throw new Error(json.message || 'Submission failed');
+
+                    // Personalize the success state and prefill Calendly link
+                    const firstName = (dataObj.name || '').trim().split(' ')[0] || 'friend';
+                    if (successName) successName.textContent = firstName;
+                    if (successCalendly) successCalendly.href = buildCalendlyURL(dataObj);
+                    showStep('success');
+                    // Scroll modal panel back to top so success state is visible
+                    contactModal.querySelector('.modal-panel').scrollTop = 0;
+                } catch (err) {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Try again';
+                    console.error('Contact form submission failed:', err);
+                    alert("Couldn't send that — please try again, or email hello@thatcanvagirl.com directly.");
+                }
+            });
+        }
 
         // Intercept all #contact anchor clicks AND data-open-modal triggers
         document.addEventListener('click', (e) => {
@@ -36,13 +104,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 openContactModal(trigger);
                 return;
             }
-            // Close handlers
             if (e.target.closest('[data-close-modal]')) {
                 closeContactModal();
             }
         });
 
-        // ESC closes
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape' && contactModal.classList.contains('is-open')) {
                 closeContactModal();

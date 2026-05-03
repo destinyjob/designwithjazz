@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jasmine Gathoga | The Canva Girl</title>
     <meta name="description" content="LinkedIn brand strategy + design for consultants and service providers. Stop being 'liked', start getting paid. #1 Branding & Positioning on LinkedIn Kenya.">
-    <link rel="stylesheet" href="css/styles.css?v=modal1">
+    <link rel="stylesheet" href="css/styles.css?v=modal4">
 </head>
 <body>
 
@@ -963,18 +963,40 @@
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
             </button>
 
-            <div class="modal-header">
+            <div class="modal-header" data-modal-step="form">
                 <span class="modal-eyebrow">Let's get you positioned</span>
                 <h2 class="modal-title" id="contact-modal-title">Tell me about your goal</h2>
-                <p class="modal-sub">Drop the details, I read every message and reply within 1–2 business days.</p>
+                <p class="modal-sub">Quick qualifier so I walk into our call already knowing what you need. Takes 30 seconds.</p>
             </div>
 
-            <form class="contact-form contact-form--modal"
-                  action="https://formsubmit.co/hello@thatcanvagirl.com"
+            <!-- Success state — shown after form submission, replaces the form view -->
+            <div class="modal-success" data-modal-step="success" hidden>
+                <div class="success-checkmark" aria-hidden="true">
+                    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+                </div>
+                <span class="modal-eyebrow">Got it 🎉</span>
+                <h2 class="modal-title">Awesome, <span id="success-name">friend</span> — now grab your slot</h2>
+                <p class="modal-sub">
+                    Your details are on their way to my inbox. Next step: book your free
+                    <strong>LinkedIn Profile Audit call</strong>. Your name and email are
+                    already prefilled, so it's one click.
+                </p>
+                <a id="success-calendly" class="btn btn--primary btn--xl form-submit"
+                   href="https://calendly.com/jasminegathoga/linkedin-profile-audit"
+                   target="_blank" rel="noopener noreferrer">
+                    Book your audit call ↗
+                </a>
+                <button type="button" class="modal-secondary-link" data-close-modal>
+                    Or close this and I'll reach out within 1–2 business days
+                </button>
+            </div>
+
+            <form class="contact-form contact-form--modal" data-modal-step="form"
+                  action="https://formsubmit.co/ajax/hello@thatcanvagirl.com"
                   method="POST">
                 <input type="hidden" name="_subject" value="New inquiry from thatcanvagirl.com">
                 <input type="hidden" name="_template" value="table">
-                <input type="hidden" name="_captcha" value="true">
+                <input type="hidden" name="_captcha" value="false">
                 <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off">
 
                 <div class="form-row form-row--split">
@@ -1016,6 +1038,6 @@
         </div>
     </div>
 
-    <script src="js/main.js?v=modal2"></script>
+    <script src="js/main.js?v=modal3"></script>
 </body>
 </html>

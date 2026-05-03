@@ -1651,6 +1651,65 @@ h2 {
     max-width: none;
 }
 
+/* === Success state (shown after form submission) === */
+/* The [hidden] attribute alone is overridden by display:flex on the form,
+   so make sure both states obey hidden. */
+[hidden].modal-success,
+[hidden].contact-form,
+[hidden].modal-header {
+    display: none !important;
+}
+
+.modal-success {
+    text-align: center;
+    padding: 0.5rem 0;
+    animation: success-in 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+@keyframes success-in {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+.success-checkmark {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: rgba(34, 197, 94, 0.12);
+    color: #16a34a;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+    animation: success-pop 0.55s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+@keyframes success-pop {
+    0%   { transform: scale(0); }
+    60%  { transform: scale(1.15); }
+    100% { transform: scale(1); }
+}
+.modal-success .modal-eyebrow { display: block; margin-bottom: 0.5rem; }
+.modal-success .modal-title   { margin-bottom: 0.5rem; }
+.modal-success .modal-sub     { margin-bottom: 1.75rem; max-width: 460px; margin-left: auto; margin-right: auto; }
+.modal-success .form-submit   { width: 100%; }
+
+.modal-secondary-link {
+    display: block;
+    margin: 1rem auto 0;
+    background: none;
+    border: none;
+    font-family: var(--font-labels);
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    cursor: pointer;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-color: rgba(26, 10, 46, 0.2);
+    transition: color 0.2s ease, text-decoration-color 0.2s ease;
+}
+.modal-secondary-link:hover {
+    color: var(--primary-purple);
+    text-decoration-color: var(--primary-purple);
+}
+
 /* Lock body scroll while modal is open (toggled by JS) */
 body.modal-open { overflow: hidden; }
 
