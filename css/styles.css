@@ -2697,6 +2697,16 @@ section#process.slab {
 }
 
 @media (max-width: 768px) {
+    /* === Mobile process: sticky stacked cards =====================
+       Each card position:sticky's at the top of the viewport with a
+       progressive offset, so as the user scrolls the next card slides
+       up and "lands" on top of the previous (which stays peeking out
+       just above). Total section height is comfortable to scroll
+       through — 9 cards * ~70vh of room each. The desktop scroll-jack
+       JS already short-circuits when isNarrow, but the wave-animation
+       loop still sets inline transforms on cards every frame, so we
+       force transform:none here to keep sticky positioning clean.
+       ============================================================= */
     .process-wrapper {
         height: auto;
     }
@@ -2705,37 +2715,65 @@ section#process.slab {
         position: relative;
         top: auto;
         height: auto;
-        padding: 4rem 0;
+        padding: 3rem 0 4rem;
         overflow: visible;
     }
 
-    .process-hand {
-        width: 140px;
-        top: -65px;
-        left: -45px;
-    }
+    /* Hide the elements that only make sense in the desktop horizontal layout */
+    .process-hand,
+    .process-rope,
+    .process-progress { display: none !important; }
+    /* Kill the long dashed timeline line (designed for desktop horizontal flow) */
+    .process-scroll-track::before { display: none; }
 
     .process-scroll {
-        overflow-x: auto;
-        scrollbar-width: none;
+        overflow: visible;
+        padding: 0 1.25rem;
     }
 
-    .process-scroll::-webkit-scrollbar { display: none; }
-
     .process-scroll-track {
-        gap: 0.75rem;
-        padding: 60px 1rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+        padding: 0;
+        max-width: 380px;
+        margin: 0 auto;
+        position: relative;
     }
 
     .process-step-card {
-        width: 200px;
-        padding: 1.5rem;
-        min-height: 180px;
+        width: 100%;
+        position: sticky;
+        top: 90px;
+        margin: 0 0 45vh 0;
+        padding: 1.75rem 1.75rem 1.5rem;
+        min-height: auto;
+        /* Override the JS-set inline wave transforms — they'd break sticky */
+        transform: none !important;
+        box-shadow: 0 14px 36px rgba(26, 10, 46, 0.16),
+                    0 28px 64px rgba(26, 10, 46, 0.10);
+        transition: box-shadow 0.4s ease;
     }
+    /* Keep the last card from leaving extra trailing scroll room */
+    .process-step-card:last-child { margin-bottom: 0; }
 
-    .process-step-watermark { font-size: 4.5rem; }
+    /* Progressive sticky offsets — each new card lands ~10px below the
+       previous so you see the older cards peeking above as a "deck" */
+    .process-step-card:nth-child(1) { top: 90px; }
+    .process-step-card:nth-child(2) { top: 100px; }
+    .process-step-card:nth-child(3) { top: 110px; }
+    .process-step-card:nth-child(4) { top: 120px; }
+    .process-step-card:nth-child(5) { top: 130px; }
+    .process-step-card:nth-child(6) { top: 140px; }
+    .process-step-card:nth-child(7) { top: 150px; }
+    .process-step-card:nth-child(8) { top: 160px; }
+    .process-step-card:nth-child(9) { top: 170px; }
 
-    .process-progress { display: none; }
+    .process-step-watermark {
+        font-size: 4rem;
+        right: 18px;
+        top: 14px;
+    }
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -261,7 +261,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const processCards   = processTrack ? processTrack.querySelectorAll('.process-step-card') : [];
     const processDots    = document.querySelectorAll('.process-progress-dot');
 
-    if (processWrapper && processTrack && processCards.length) {
+    // On mobile we use CSS sticky stacked cards; the wave/scroll-jack
+    // is a desktop-only effect — skip the entire init below to avoid
+    // wasted 60fps work and to keep inline transforms off the cards
+    // (sticky positioning needs an unmodified transform).
+    const isProcessNarrow = matchMedia('(max-width: 768px)').matches;
+    if (processWrapper && processTrack && processCards.length && !isProcessNarrow) {
         const prefersReducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
         const isNarrow = matchMedia('(max-width: 768px)').matches;
 
