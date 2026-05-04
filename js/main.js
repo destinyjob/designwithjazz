@@ -58,16 +58,9 @@ document.addEventListener('DOMContentLoaded', () => {
             contactModal.classList.remove('is-open');
             contactModal.setAttribute('aria-hidden', 'true');
             document.body.classList.remove('modal-open');
-            // Restore scroll position INSTANTLY — html has scroll-behavior:
-            // smooth which would otherwise animate the restore as a visible
-            // scroll-back-up, making it feel like the page jumped to top
-            // first then scrolled to the section.
+            // Restore scroll position
             document.body.style.top = '';
-            const html = document.documentElement;
-            const prev = html.style.scrollBehavior;
-            html.style.scrollBehavior = 'auto';
             window.scrollTo(0, savedScrollY);
-            requestAnimationFrame(() => { html.style.scrollBehavior = prev; });
             if (lastTrigger && typeof lastTrigger.focus === 'function') lastTrigger.focus();
             document.dispatchEvent(new CustomEvent('modal:close'));
         };
@@ -217,13 +210,7 @@ document.addEventListener('DOMContentLoaded', () => {
             navBack.setAttribute('aria-hidden', 'true');
             document.body.classList.remove('mobile-nav-open');
             document.body.style.top = '';
-            // Bypass html { scroll-behavior: smooth } so we don't animate
-            // the restore (would visually scroll back to position).
-            const html = document.documentElement;
-            const prev = html.style.scrollBehavior;
-            html.style.scrollBehavior = 'auto';
             window.scrollTo(0, savedNavScrollY);
-            requestAnimationFrame(() => { html.style.scrollBehavior = prev; });
         };
         const openNav = () => {
             savedNavScrollY = window.scrollY;
@@ -313,41 +300,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const processCards   = processTrack ? processTrack.querySelectorAll('.process-step-card') : [];
     const processDots    = document.querySelectorAll('.process-progress-dot');
 
-    // === Process step cards: per-card slide-in reveal on desktop ======
-    // Mobile uses CSS sticky stacked cards (no observer needed there —
-    // they're always visible as you scroll past). Desktop uses the new
-    // zig-zag timeline: each card alternates left/right and slides in
-    // from its respective side as it scrolls into view.
-    if (processCards && processCards.length) {
-        const isMobileProcess = matchMedia('(max-width: 768px)').matches;
-        if (!isMobileProcess) {
-            // Set the per-card initial slide-from transform via a CSS var
-            // (used by the .process-step-card[style*="--reveal-from"] rule).
-            processCards.forEach((card, i) => {
-                const fromX = i % 2 === 0 ? '-40px' : '40px';
-                card.style.setProperty('--reveal-from', `translateX(${fromX})`);
-            });
-            const cardObserver = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('is-revealed');
-                        cardObserver.unobserve(entry.target);
-                    }
-                });
-            }, { threshold: 0.2, rootMargin: '0px 0px -100px 0px' });
-            processCards.forEach(card => cardObserver.observe(card));
-        } else {
-            // Mobile: cards reveal-on-scroll isn't needed — sticky stack
-            // makes them visible in turn naturally.
-            processCards.forEach(c => c.classList.add('is-revealed'));
-        }
-    }
-
-    // OLD scroll-jack/wave init — disabled. Kept here as `if (false)` so
-    // the original variables don't throw on later references that no
-    // longer exist. The new layout (vertical zig-zag) doesn't need any
-    // of this rAF work.
-    if (false && processWrapper && processTrack && processCards.length) {
+    // On mobile we use CSS sticky stacked cards; the wave/scroll-jack
+    // is a desktop-only effect — skip the entire init below to avoid
+    // wasted 60fps work and to keep inline transforms off the cards
+    // (sticky positioning needs an unmodified transform).
+    const isProcessNarrow = matchMedia('(max-width: 768px)').matches;
+    if (processWrapper && processTrack && processCards.length && !isProcessNarrow) {
         const prefersReducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
         const isNarrow = matchMedia('(max-width: 768px)').matches;
 
