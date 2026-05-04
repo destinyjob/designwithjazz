@@ -483,6 +483,15 @@ document.addEventListener('DOMContentLoaded', () => {
         // initial assignment so the 3 visible slots start in the right places
         applyWheelPositions(active);
 
+        // Mobile prev/next arrows — manual testimonial navigation
+        sideEl?.querySelectorAll('.reviews-arrow').forEach((btn) => {
+            const dir = btn.classList.contains('reviews-arrow--next') ? 1 : -1;
+            btn.addEventListener('click', () => {
+                const next = (active + dir + items.length) % items.length;
+                setActive(next, { fromUser: true });
+            });
+        });
+
         const tickAuto = () => setActive((active + 1) % items.length);
 
         const startAuto = () => {

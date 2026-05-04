@@ -863,6 +863,9 @@ h2 {
     min-height: 480px;
 }
 
+/* Manual prev/next arrows are mobile-only — desktop uses the wheel for nav */
+.reviews-arrow { display: none; }
+
 /* Active person's avatar — hidden on desktop (the wheel shows it),
    shown prominently on mobile where the wheel is collapsed */
 .reviews-quote-avatar {
@@ -1020,11 +1023,42 @@ h2 {
        room from the "Book My Audit" button just above. */
     .reviews-quote-side {
         position: relative;
-        padding: 0;
+        padding: 0 38px;     /* leave horizontal room for the prev/next arrows */
         min-height: auto;
         overflow: visible;
         margin-top: 3rem;
     }
+
+    /* Prev/next arrows — mobile-only manual navigation.
+       Sit on the left/right edges, vertically centered against the polaroid. */
+    .reviews-arrow {
+        position: absolute;
+        top: 48%;
+        transform: translateY(-50%);
+        z-index: 10;
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        border: 1px solid rgba(255, 255, 255, 0.22);
+        background: rgba(20, 8, 40, 0.7);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        color: #fff;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        padding: 0;
+        transition: background 0.2s ease, transform 0.2s ease;
+    }
+    .reviews-arrow:hover,
+    .reviews-arrow:active {
+        background: var(--primary-purple);
+        border-color: var(--primary-purple);
+        transform: translateY(-50%) scale(1.06);
+    }
+    .reviews-arrow--prev { left: -2px; }
+    .reviews-arrow--next { right: -2px; }
     /* Coral aura behind the stack — pops against the dark slab */
     .reviews-quote-side::before {
         content: '';
