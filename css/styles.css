@@ -7,11 +7,11 @@ html {
        gets propagated and shows as a dark stripe next to every light section. */
     scrollbar-width: none;
     -ms-overflow-style: none;
-    /* Clip horizontal overflow at the root — body's overflow-x:hidden alone
-       isn't enough on some browsers (iOS Safari especially), and the polaroid
-       swipe animation + marquee can otherwise allow the page to scroll
-       horizontally a few px. */
-    overflow-x: clip;
+    /* Don't add overflow-x:clip/hidden here — it creates an overflow context
+       that breaks position:sticky on the desktop process scroll-jack stage.
+       Horizontal overflow is contained at body (overflow-x:hidden, below) and
+       at the specific elements that animate off-screen (.reviews-quote-side
+       polaroid swipe, .marquee-container, hand accents that don't bleed). */
 }
 
 html::-webkit-scrollbar,
@@ -81,6 +81,14 @@ body {
     overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
 }
+
+/* Clip any horizontal overflow at <main> rather than at <html> or <body>.
+   <html> overflow-x:clip would break position:sticky on the desktop process
+   scroll-jack. <main> has overflow-y:visible by default so it doesn't become
+   a scroll container — the viewport remains the scroll context, sticky stays
+   intact, and any element that animates off the side (polaroid swipe, hand
+   accents, marquee items) is cropped at the main edge. */
+main.slab-container { overflow-x: clip; }
 
 /* Top Header Styles */
 .top-header {
