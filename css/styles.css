@@ -2745,11 +2745,13 @@ section#process.slab {
         width: 100%;
         position: sticky;
         top: 90px;
-        /* Tight scroll-step between cards — each card has just enough
-           room beneath it to trigger the next card's sticky.
-           Result: cards feel like they sit nearly on the same line and
-           fold onto each other as you scroll. */
-        margin: 0 0 110px 0;
+        /* Cards sit nearly on the same line in natural flow (just 16px
+           visual breathing room). As you scroll, each one folds onto
+           the previous — but because of the staggered top values
+           below, each previous card stays peeking out above the active
+           one, so the deck keeps building visibly instead of
+           collapsing into a single card. */
+        margin: 0 0 16px 0;
         padding: 1.75rem 1.75rem 1.5rem;
         min-height: auto;
         /* Override the JS-set inline wave transforms — they'd break sticky */
@@ -2760,6 +2762,11 @@ section#process.slab {
     }
     /* Keep the last card from leaving extra trailing scroll room */
     .process-step-card:last-child { margin-bottom: 0; }
+    /* Give the section a tail of scroll-room AFTER the cards naturally
+       end, so the last card actually has somewhere to scroll into and
+       can complete its sticky travel (otherwise card 9 unsticks too
+       early and falls out of the deck). */
+    .process-scroll-track { padding-bottom: 60vh; }
 
     /* Progressive sticky offsets — each new card lands ~10px below the
        previous so you see the older cards peeking above as a "deck" */
