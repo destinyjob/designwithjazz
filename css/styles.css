@@ -3761,12 +3761,25 @@ section#process.slab {
     .vault-title { font-size: 1.3rem !important; line-height: 1.2; }
     .vault-desc { font-size: 0.95rem; margin-bottom: 1rem; }
 
-    /* ---------- Visuals Carousel: image-first, swipe ---------- */
+    /* ---------- Visuals Carousel: image-first, swipe + arrows ---------- */
     .visuals-carousel {
         grid-template-columns: 1fr;
         gap: 0.9rem;
     }
-    .vc-arrow { display: none; }
+    /* Show arrows on mobile too — most users don't discover swipe affordance.
+       Positioned INSIDE the stage with translucent dark pill so they don't
+       eat layout space or get cut off at the screen edge. */
+    .vc-arrow {
+        display: inline-flex;
+        width: 40px;
+        height: 40px;
+        background: rgba(20, 8, 40, 0.55);
+        border-color: rgba(255, 255, 255, 0.25);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+    }
+    .vc-arrow--prev { left: 10px; right: auto; }
+    .vc-arrow--next { right: 10px; left: auto; }
     .vc-stage {
         aspect-ratio: 4 / 3;
         border-radius: 18px;
