@@ -421,39 +421,62 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         };
 
+        // Helper — actually swap the displayed content to the target index
+        const swapContent = (idx) => {
+            const t = items[idx];
+            if (!t) return;
+            quoteText.textContent = t.dataset.quote || '';
+            nameEl.textContent    = t.dataset.name  || '';
+            roleEl.textContent    = t.dataset.role  || '';
+            if (avatarEl) {
+                const ti = t.querySelector('.review-person-avatar img');
+                if (ti) { avatarEl.src = ti.src; avatarEl.alt = ti.alt; }
+            }
+            if (counterEl) counterEl.textContent = String(idx + 1).padStart(2, '0');
+        };
+
+        const sideEl = quoteBox.closest('.reviews-quote-side');
+
         const setActive = (next, { fromUser = false } = {}) => {
             if (next === active) return;
             const target = items[next];
             if (!target) return;
 
-            // crossfade quote text/footer
-            quoteBox.classList.add('is-swapping');
-            footerEl.classList.add('is-swapping');
-
-            // wheel positions update immediately (transitions handle smoothness)
+            // Wheel positions update immediately on desktop (transitions handle the rest)
             applyWheelPositions(next);
-            active = next;
 
-            setTimeout(() => {
-                // swap text content of the right-side quote
-                quoteText.textContent = target.dataset.quote || '';
-                nameEl.textContent    = target.dataset.name  || '';
-                roleEl.textContent    = target.dataset.role  || '';
-                if (avatarEl) {
-                    const targetImg = target.querySelector('.review-person-avatar img');
-                    if (targetImg) {
-                        avatarEl.src = targetImg.src;
-                        avatarEl.alt = targetImg.alt;
-                    }
-                }
-                if (counterEl) counterEl.textContent = String(next + 1).padStart(2, '0');
+            const isMobile = matchMedia('(max-width: 880px)').matches;
 
-                requestAnimationFrame(() => {
-                    quoteBox.classList.remove('is-swapping');
+            if (isMobile && sideEl) {
+                // Mobile: physical card-swipe — current polaroid swipes off
+                // to the left, the new one slides in from the right
+                const EXIT_MS = 320;
+                const ENTER_MS = 420;
+                sideEl.classList.remove('is-card-in');
+                sideEl.classList.add('is-card-out');
+                footerEl.classList.add('is-swapping');
+
+                setTimeout(() => {
+                    swapContent(next);
+                    sideEl.classList.remove('is-card-out');
+                    sideEl.classList.add('is-card-in');
                     footerEl.classList.remove('is-swapping');
-                });
-            }, SWAP_MS);
+                    setTimeout(() => sideEl.classList.remove('is-card-in'), ENTER_MS);
+                }, EXIT_MS);
+            } else {
+                // Desktop wheel: crossfade the right-side quote text
+                quoteBox.classList.add('is-swapping');
+                footerEl.classList.add('is-swapping');
+                setTimeout(() => {
+                    swapContent(next);
+                    requestAnimationFrame(() => {
+                        quoteBox.classList.remove('is-swapping');
+                        footerEl.classList.remove('is-swapping');
+                    });
+                }, SWAP_MS);
+            }
 
+            active = next;
             if (fromUser) restartAuto();
         };
 

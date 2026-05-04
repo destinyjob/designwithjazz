@@ -1015,13 +1015,15 @@ h2 {
     .reviews-list-side { display: none; }
 
     /* Wrap that holds the polaroid + ghost cards + aura.
-       Use position: relative so the ghost pseudos can overlay. */
+       Use position: relative so the ghost pseudos can overlay.
+       Top margin gives the avatar (which protrudes 42px above) breathing
+       room from the "Book My Audit" button just above. */
     .reviews-quote-side {
         position: relative;
         padding: 0;
         min-height: auto;
         overflow: visible;
-        margin-top: 0.5rem;
+        margin-top: 3rem;
     }
     /* Coral aura behind the stack — pops against the dark slab */
     .reviews-quote-side::before {
@@ -1057,12 +1059,50 @@ h2 {
             0 14px 36px rgba(20, 8, 40, 0.42),
             0 28px 64px rgba(20, 8, 40, 0.28);
         transform: rotate(-1.4deg);
-        transition: opacity 0.45s cubic-bezier(0.22,1,0.36,1),
-                    transform 0.45s cubic-bezier(0.22,1,0.36,1);
+        will-change: transform, opacity;
     }
-    .reviews-quote.is-swapping {
-        opacity: 0;
-        transform: rotate(-1.4deg) translateY(8px) scale(0.98);
+
+    /* === Card swipe animation (mobile only) ===========================
+       JS adds .is-card-out to fly the polaroid + avatar off to the left,
+       then .is-card-in to deal a fresh card in from the right. Both card
+       and avatar share the same animation timing for a unified motion. */
+    @keyframes polaroid-out {
+        0%   { transform: rotate(-1.4deg) translate(0, 0); opacity: 1; }
+        100% { transform: rotate(-22deg) translate(-130%, 24px); opacity: 0; }
+    }
+    @keyframes polaroid-in {
+        0%   { transform: rotate(14deg) translate(140%, 24px); opacity: 0; }
+        45%  { opacity: 1; }
+        100% { transform: rotate(-1.4deg) translate(0, 0); opacity: 1; }
+    }
+    @keyframes avatar-out {
+        0%   { transform: translateX(-50%) rotate(0deg) translate(0, 0); opacity: 1; }
+        100% { transform: translateX(-50%) translate(-180%, 18px) rotate(-22deg); opacity: 0; }
+    }
+    @keyframes avatar-in {
+        0%   { transform: translateX(-50%) translate(180%, 18px) rotate(14deg); opacity: 0; }
+        45%  { opacity: 1; }
+        100% { transform: translateX(-50%) rotate(0deg) translate(0, 0); opacity: 1; }
+    }
+    .reviews-quote-side.is-card-out .reviews-quote {
+        animation: polaroid-out 0.32s cubic-bezier(0.55, 0.06, 0.68, 0.19) forwards;
+    }
+    .reviews-quote-side.is-card-out .reviews-quote-avatar {
+        animation: avatar-out 0.32s cubic-bezier(0.55, 0.06, 0.68, 0.19) forwards;
+    }
+    .reviews-quote-side.is-card-in .reviews-quote {
+        animation: polaroid-in 0.42s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+    .reviews-quote-side.is-card-in .reviews-quote-avatar {
+        animation: avatar-in 0.42s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+    @media (prefers-reduced-motion: reduce) {
+        .reviews-quote-side.is-card-out .reviews-quote,
+        .reviews-quote-side.is-card-in  .reviews-quote,
+        .reviews-quote-side.is-card-out .reviews-quote-avatar,
+        .reviews-quote-side.is-card-in  .reviews-quote-avatar {
+            animation: none !important;
+        }
     }
     /* Two ghost polaroids peeking behind — pure decoration, hint at depth */
     .reviews-quote::before,
