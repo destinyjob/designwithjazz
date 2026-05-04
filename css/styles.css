@@ -2092,6 +2092,10 @@ body.modal-open { overflow: hidden; }
     background: var(--bg-alt);
 }
 
+/* Anchor the hero portrait near the top so Jasmine's head/face stays in
+   frame regardless of crop area — fixes head-cut-off on mobile */
+.bento-tall .bento-img { object-position: center 18%; }
+
 .bento-stat {
     grid-column: 2;
     grid-row: 1;
