@@ -58,9 +58,15 @@ document.addEventListener('DOMContentLoaded', () => {
             contactModal.classList.remove('is-open');
             contactModal.setAttribute('aria-hidden', 'true');
             document.body.classList.remove('modal-open');
-            // Restore scroll position
+            // Restore scroll position INSTANTLY — html has scroll-behavior:
+            // smooth which would otherwise animate the restore as a visible
+            // scroll-back-up.
             document.body.style.top = '';
+            const html = document.documentElement;
+            const prev = html.style.scrollBehavior;
+            html.style.scrollBehavior = 'auto';
             window.scrollTo(0, savedScrollY);
+            requestAnimationFrame(() => { html.style.scrollBehavior = prev; });
             if (lastTrigger && typeof lastTrigger.focus === 'function') lastTrigger.focus();
             document.dispatchEvent(new CustomEvent('modal:close'));
         };
@@ -210,7 +216,13 @@ document.addEventListener('DOMContentLoaded', () => {
             navBack.setAttribute('aria-hidden', 'true');
             document.body.classList.remove('mobile-nav-open');
             document.body.style.top = '';
+            // Bypass html { scroll-behavior: smooth } so we don't animate
+            // the restore (would visually scroll back to position).
+            const html = document.documentElement;
+            const prev = html.style.scrollBehavior;
+            html.style.scrollBehavior = 'auto';
             window.scrollTo(0, savedNavScrollY);
+            requestAnimationFrame(() => { html.style.scrollBehavior = prev; });
         };
         const openNav = () => {
             savedNavScrollY = window.scrollY;
