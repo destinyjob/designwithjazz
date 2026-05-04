@@ -2900,111 +2900,127 @@ section#process.slab {
     position: relative;
 }
 
-/* Tall wrapper provides scroll runway. Stage pins inside it. */
+/* === Desktop process: vertical zig-zag timeline ====================
+   Cards alternate left/right of a dashed connector line. Each card
+   slides in from its side as it scrolls into view (.is-revealed
+   added by IntersectionObserver). No scroll-jack mechanics, no
+   sticky pinning — pure scroll + reveal. Reliable and premium.
+   ================================================================== */
 .process-wrapper {
     position: relative;
-    height: 250vh;
+    height: auto;
 }
 
 .process-stage {
-    position: sticky;
-    top: 0;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    overflow: hidden;
-    padding: 4rem 0;
+    position: relative;
+    top: auto;
+    height: auto;
+    display: block;
+    overflow: visible;
+    padding: 3rem 0 4rem;
 }
 
 .process-header {
     text-align: center;
-    margin-bottom: 1.5rem;
+    margin-bottom: 4rem;
     position: relative;
-    flex-shrink: 0;
 }
 
-/* Scroll progress dots — one per step, sits below the cards */
-.process-progress {
-    display: flex;
-    gap: 10px;
-    justify-content: center;
-    margin-top: 1.5rem;
-    flex-shrink: 0;
-}
+/* Hide the desktop-only progress dots and SVG rope — both were specific
+   to the old horizontal scroll-jack and don't fit the timeline layout */
+.process-progress,
+.process-rope { display: none; }
 
-.process-progress-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: rgba(139, 92, 246, 0.18);
-    transition: background 0.35s ease, transform 0.35s ease;
-}
-
-.process-progress-dot.active {
-    background: var(--primary-purple);
-    transform: scale(1.4);
-}
-
-/* Full-bleed scroll viewport — sized to the slab's outer box rather than 100vw
-   so it doesn't leak into body's scrollbar gutter (which would expose the dark
-   body bg on the right). Slab has horizontal padding of 5vw, so extending the
-   width by 10vw + pulling left by 5vw exactly cancels the padding.
-   No edge mask: cards clip cleanly against the slab so they read as sitting
-   on top of the page rather than fading behind a wall of fog. */
 .process-scroll {
     position: relative;
-    width: calc(100% + 10vw);
-    margin-left: -5vw;
-    overflow: hidden;
-    flex: 1 1 auto;
-    display: flex;
-    align-items: center;
+    width: 100%;
+    overflow: visible;
 }
 
 .process-scroll-track {
     position: relative;
     display: flex;
-    gap: 1.25rem;
-    padding: 80px 100px;
-    align-items: center;
-    will-change: transform;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    padding: 1rem 0 0;
+    max-width: 920px;
+    margin: 0 auto;
     isolation: isolate;
+    transform: none !important;  /* defensively kill any leftover JS transform */
 }
 
-/* Curved SVG rope — JS rewrites the path d each frame */
-.process-rope {
+/* Dashed vertical connector line down the centre */
+.process-scroll-track::before {
+    content: '';
     position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
+    left: 50%;
+    top: 1rem;
+    bottom: 1rem;
+    width: 2px;
+    transform: translateX(-50%);
+    background-image: linear-gradient(to bottom, rgba(139, 92, 246, 0.45) 50%, transparent 50%);
+    background-size: 2px 10px;
+    background-repeat: repeat-y;
     z-index: 0;
-    overflow: visible;
 }
 
-.process-rope path {
-    fill: none;
-    stroke: rgba(139, 92, 246, 0.4);
-    stroke-width: 1.5;
-    stroke-dasharray: 5 5;
-    stroke-linecap: round;
-}
-
-/* Step card — fixed 220px, GPU-composited */
+/* Step card — alternates sides, slides in from its side on scroll.
+   --reveal-from is set per-card by JS (translateX(-40px) for odd cards,
+   translateX(40px) for even). Falls back to none if JS hasn't set it. */
 .process-step-card {
     position: relative;
     overflow: hidden;
-    width: 220px;
-    flex-shrink: 0;
-    min-height: 200px;
+    width: 380px;
+    max-width: 45%;
+    min-height: 180px;
     border-radius: var(--border-radius-lg);
-    padding: 1.75rem;
+    padding: 1.75rem 1.75rem 1.5rem;
     display: flex;
     flex-direction: column;
-    will-change: transform;
-    z-index: 1;
+    margin-bottom: 2.75rem;
+    z-index: 2;
+    opacity: 0;
+    transform: var(--reveal-from, none);
+    transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+                transform 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+                box-shadow 0.3s ease;
 }
+.process-step-card:last-child { margin-bottom: 0; }
+
+/* Alternate sides */
+.process-step-card:nth-child(odd)  { align-self: flex-start; }
+.process-step-card:nth-child(even) { align-self: flex-end; }
+
+/* Revealed: slide back to natural position, fade in */
+.process-step-card.is-revealed {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* Hover lift — uses translateY only so it composes with the reveal state */
+.process-step-card.is-revealed:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px rgba(139, 92, 246, 0.18);
+}
+
+/* Connector dot — sits on the centre line at each card's vertical centre */
+.process-step-card::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--primary-purple);
+    box-shadow: 0 0 0 4px var(--bg-cream);
+    transform: translateY(-50%);
+    z-index: 3;
+}
+.process-step-card:nth-child(odd)::after  { right: -34px; }
+.process-step-card:nth-child(even)::after { left: -34px; }
+.slab--light .process-step-card::after { box-shadow: 0 0 0 4px #FFFBF5; }
+.slab--dark  .process-step-card::after { box-shadow: 0 0 0 4px var(--bg-dark); }
 
 /* Card 1: lets the gripping hand spill out of the card's bounds. isolation
    creates a stacking context so the hand's z-index:-1 goes behind the card body
@@ -3151,7 +3167,11 @@ section#process.slab {
     }
 
     .process-step-card {
+        /* Override desktop zig-zag styles so mobile sticky-stack works */
         width: 100%;
+        max-width: none;
+        align-self: stretch;
+        opacity: 1;                           /* desktop default is 0 (waits for reveal) */
         position: sticky;
         top: 90px;
         /* Cards sit nearly on the same line in natural flow (just 16px
@@ -3163,12 +3183,13 @@ section#process.slab {
         margin: 0 0 16px 0;
         padding: 1.75rem 1.75rem 1.5rem;
         min-height: auto;
-        /* Override the JS-set inline wave transforms — they'd break sticky */
         transform: none !important;
         box-shadow: 0 14px 36px rgba(26, 10, 46, 0.16),
                     0 28px 64px rgba(26, 10, 46, 0.10);
         transition: box-shadow 0.4s ease;
     }
+    /* Hide the desktop connector dots on mobile (no center line to anchor to) */
+    .process-step-card::after { display: none; }
     /* Keep the last card from leaving extra trailing scroll room */
     .process-step-card:last-child { margin-bottom: 0; }
     /* Give the section a tail of scroll-room AFTER the cards naturally
