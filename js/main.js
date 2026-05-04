@@ -332,9 +332,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
         let activeIdx  = 0;
         let currentTx  = 0;    // smoothed track x — lerped toward target each frame
-        const LERP        = 0.14; // track-follow responsiveness; higher = snappier
-        const DEAD_ZONE   = 0.08; // hold the track still for the first/last 8% of scroll
-                                  // so step 1 / step 9 get a moment before the pin releases
+        const LERP        = 0.28; // track-follow responsiveness; higher = snappier.
+                                  // Was 0.14 — too laggy on fast trackpad scroll, the
+                                  // track would still be mid-animation when the user
+                                  // scrolled past the section, so step 9 never fully showed.
+        const DEAD_ZONE   = 0.04; // hold the track still for the first/last 4% of scroll
+                                  // so step 1 / step 9 get a brief breath before the pin
+                                  // releases. Was 0.08 — felt cramped at both ends.
 
         function tick(time) {
             // -- 1. SCROLL PROGRESS -----------------------------------------
