@@ -992,36 +992,165 @@ h2 {
    the left side and show only the quote stage. The active person's name
    and role still appear in the footer, so users always know who's quoted.
    ====================================================================== */
+/* === Mobile testimonials: polaroid postcard with ghost-deck ============
+   The wheel is desktop-only. On mobile we show the active testimonial as
+   a tilted polaroid card with two "ghost" cards peeking behind it (giving
+   that deck-of-postcards feel that fits Jasmine's playful, designer-led
+   brand). A soft coral aura sits behind the stack to make it pop against
+   the dark purple section.
+   ====================================================================== */
 @media (max-width: 880px) {
     #testimonials.slab {
-        padding-top: 5rem;
-        padding-bottom: 6rem;
+        padding-top: 4.5rem;
+        padding-bottom: 5.5rem;
     }
+    /* Lose the card-chrome of the wheel container — let the polaroid breathe */
     .reviews-card {
         grid-template-columns: 1fr;
-        border-radius: 24px;
+        background: transparent;
+        border: none;
+        box-shadow: none;
+        overflow: visible;
     }
     .reviews-list-side { display: none; }
+
+    /* Wrap that holds the polaroid + ghost cards + aura.
+       Use position: relative so the ghost pseudos can overlay. */
     .reviews-quote-side {
-        padding: 2.75rem 1.5rem 2rem;
+        position: relative;
+        padding: 0;
         min-height: auto;
+        overflow: visible;
+        margin-top: 0.5rem;
     }
-    /* Avatar is the visual anchor on mobile (since wheel is gone) */
-    .reviews-quote-avatar { display: block; }
-    .reviews-bigquote {
-        font-size: 3.2rem;
-        margin-bottom: 0.25rem;
+    /* Coral aura behind the stack — pops against the dark slab */
+    .reviews-quote-side::before {
+        content: '';
+        position: absolute;
+        z-index: 0;
+        left: 50%;
+        top: 8%;
+        width: 360px;
+        height: 360px;
+        transform: translateX(-50%);
+        border-radius: 50%;
+        background: radial-gradient(circle at center,
+            rgba(255, 122, 89, 0.55) 0%,
+            rgba(255, 122, 89, 0.25) 40%,
+            transparent 72%);
+        filter: blur(1px);
+        pointer-events: none;
+    }
+
+    /* The actual polaroid — using the existing .reviews-quote element as
+       the polaroid surface. Avatar above, quote inside a card with white
+       border and slight tilt for that hand-placed feel. */
+    .reviews-quote {
+        position: relative;
+        z-index: 2;
+        margin: 0 auto;
+        max-width: 320px;
+        background: #FFFBF5;
+        border-radius: 18px;
+        padding: 70px 1.4rem 1.5rem;     /* top room for avatar overlap */
+        box-shadow:
+            0 14px 36px rgba(20, 8, 40, 0.42),
+            0 28px 64px rgba(20, 8, 40, 0.28);
+        transform: rotate(-1.4deg);
+        transition: opacity 0.45s cubic-bezier(0.22,1,0.36,1),
+                    transform 0.45s cubic-bezier(0.22,1,0.36,1);
+    }
+    .reviews-quote.is-swapping {
+        opacity: 0;
+        transform: rotate(-1.4deg) translateY(8px) scale(0.98);
+    }
+    /* Two ghost polaroids peeking behind — pure decoration, hint at depth */
+    .reviews-quote::before,
+    .reviews-quote::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: #FFFBF5;
+        border-radius: 18px;
+        z-index: -1;
+        box-shadow: 0 12px 32px rgba(20, 8, 40, 0.28);
+    }
+    .reviews-quote::before {
+        transform: rotate(3.2deg) translate(8px, 6px);
+        opacity: 0.7;
+    }
+    .reviews-quote::after {
+        transform: rotate(-4.5deg) translate(-10px, 10px);
         opacity: 0.5;
     }
-    .reviews-quote { margin: 0.75rem auto 1.5rem; }
-    .reviews-quote p { font-size: 1.02rem; line-height: 1.65; }
-    .reviews-quote-footer {
-        padding-top: 1.25rem;
-        gap: 0.5rem;
+
+    /* Avatar — circular, large, sits at top of card overlapping the edge */
+    .reviews-quote-avatar {
+        display: block;
+        position: absolute;
+        z-index: 3;
+        top: -42px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 96px;
+        height: 96px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 4px solid #FFFBF5;
+        box-shadow:
+            0 0 0 2px var(--primary-purple),
+            0 10px 24px rgba(139, 92, 246, 0.45);
+        margin: 0;
     }
-    .reviews-quote-author strong { font-size: 1rem; }
-    .reviews-quote-author span { font-size: 0.78rem; }
-    .reviews-quote-counter { font-size: 0.78rem; }
+
+    /* Hide the big ❝ on mobile — the polaroid + avatar is the visual anchor,
+       no need for an extra decorative quote mark cluttering the stack. */
+    .reviews-bigquote { display: none; }
+
+    /* Quote text — centered italic serif */
+    .reviews-quote p {
+        font-family: 'Bricolage Grotesque', Georgia, serif;
+        font-size: 0.95rem;
+        line-height: 1.55;
+        font-style: italic;
+        font-weight: 400;
+        color: var(--text-main);
+        margin: 0;
+        text-align: center;
+    }
+
+    /* Footer (name + role + counter) — sits BELOW the polaroid, on the
+       dark slab. Center-aligned, white text. Acts like a caption tag. */
+    .reviews-quote-footer {
+        position: relative;
+        z-index: 2;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.4rem;
+        padding: 1.5rem 1rem 0;
+        border-top: none;
+        max-width: none;
+        margin: 0;
+    }
+    .reviews-quote-author { gap: 2px; }
+    /* Direct selector wins — #testimonials IS the .slab--dark element so
+       the .slab--dark prefixed selector earlier in the file never matches */
+    .reviews-quote-author strong {
+        color: #fff !important;
+        font-size: 1rem !important;
+    }
+    .reviews-quote-author span {
+        color: rgba(255, 255, 255, 0.65) !important;
+        font-size: 0.78rem !important;
+    }
+    .reviews-quote-counter {
+        font-size: 0.72rem !important;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--accent-coral) !important;
+        margin-top: 0.4rem;
+    }
+    .reviews-counter-sep { color: rgba(255,255,255,0.35) !important; }
 }
 
 /* FAQ Section Header */
