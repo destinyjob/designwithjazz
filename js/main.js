@@ -20,6 +20,11 @@ document.addEventListener('DOMContentLoaded', () => {
             successSteps.forEach(el => { el.hidden = step !== 'success'; });
         };
 
+        // Save scroll position so iOS Safari (and any browser using
+        // position:fixed body-lock) can restore it on close. The CSS uses
+        // overflow:hidden + position:fixed on body when modal is open.
+        let savedScrollY = 0;
+
         const openContactModal = (trigger) => {
             lastTrigger = trigger || document.activeElement;
             showStep('form');                       // always reset to form view on open
@@ -28,20 +33,36 @@ document.addEventListener('DOMContentLoaded', () => {
                 submitBtn.disabled = false;
                 submitBtn.textContent = 'Send it ↗';
             }
+            // Lock the page where it is so it doesn't jump while the modal is open
+            savedScrollY = window.scrollY;
+            document.body.style.top = `-${savedScrollY}px`;
             contactModal.classList.add('is-open');
             contactModal.setAttribute('aria-hidden', 'false');
             document.body.classList.add('modal-open');
-            requestAnimationFrame(() => {
-                const firstInput = contactModal.querySelector('input[name="name"]');
-                if (firstInput) firstInput.focus();
-            });
+            // Notify the page (testimonial auto-rotate listens for this)
+            document.dispatchEvent(new CustomEvent('modal:open'));
+            // Don't auto-focus on mobile — it pops the keyboard up immediately
+            // and feels aggressive. Desktop still focuses for fast typing.
+            // Use viewport width as the proxy — width-based is reliable across
+            // browsers, while `(hover: none)` isn't always set even on touch.
+            const isMobile = matchMedia('(max-width: 880px)').matches;
+            if (!isMobile) {
+                requestAnimationFrame(() => {
+                    const firstInput = contactModal.querySelector('input[name="name"]');
+                    if (firstInput) firstInput.focus();
+                });
+            }
         };
 
         const closeContactModal = () => {
             contactModal.classList.remove('is-open');
             contactModal.setAttribute('aria-hidden', 'true');
             document.body.classList.remove('modal-open');
+            // Restore scroll position
+            document.body.style.top = '';
+            window.scrollTo(0, savedScrollY);
             if (lastTrigger && typeof lastTrigger.focus === 'function') lastTrigger.focus();
+            document.dispatchEvent(new CustomEvent('modal:close'));
         };
 
         // Build a prefilled Calendly URL from the form data
@@ -118,8 +139,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Scroll Reveal Observer with Stagger Support
     const observerOptions = {
-        threshold: 0.15,
-        rootMargin: '0px 0px -80px 0px'
+        // Fire when the section is meaningfully visible — 12% in view AND
+        // crossed 120px past the bottom edge — so the reveal animation
+        // actually plays where the user can see it (was firing too early).
+        threshold: 0.12,
+        rootMargin: '0px 0px -120px 0px'
     };
 
     const observer = new IntersectionObserver((entries) => {
@@ -171,23 +195,38 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Mobile hamburger toggle
-    const burger    = document.getElementById('header-burger');
-    const mobileNav = document.getElementById('mobile-nav');
-    if (burger && mobileNav) {
+    // Mobile hamburger drawer (slides in from right with backdrop)
+    const burger     = document.getElementById('header-burger');
+    const mobileNav  = document.getElementById('mobile-nav');
+    const navBack    = document.getElementById('mobile-nav-backdrop');
+    if (burger && mobileNav && navBack) {
+        let savedNavScrollY = 0;
+
         const closeNav = () => {
             burger.setAttribute('aria-expanded', 'false');
             mobileNav.classList.remove('is-open');
             mobileNav.setAttribute('aria-hidden', 'true');
+            navBack.classList.remove('is-open');
+            navBack.setAttribute('aria-hidden', 'true');
+            document.body.classList.remove('mobile-nav-open');
+            document.body.style.top = '';
+            window.scrollTo(0, savedNavScrollY);
         };
         const openNav = () => {
+            savedNavScrollY = window.scrollY;
+            document.body.style.top = `-${savedNavScrollY}px`;
+            document.body.classList.add('mobile-nav-open');
             burger.setAttribute('aria-expanded', 'true');
             mobileNav.classList.add('is-open');
             mobileNav.setAttribute('aria-hidden', 'false');
+            navBack.classList.add('is-open');
+            navBack.setAttribute('aria-hidden', 'false');
         };
         burger.addEventListener('click', () => {
             mobileNav.classList.contains('is-open') ? closeNav() : openNav();
         });
+        // Close on backdrop tap
+        navBack.addEventListener('click', closeNav);
         // Close menu when any nav link is tapped
         mobileNav.querySelectorAll('a').forEach(a => a.addEventListener('click', closeNav));
         // ESC also closes
@@ -530,6 +569,12 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }, { threshold: 0.25 });
         rotateObserver.observe(reviewsWrap);
+
+        // Pause auto-rotate while the contact modal is open — the polaroid
+        // swipe animations behind the modal can otherwise cause subtle layout
+        // jitter and waste CPU.
+        document.addEventListener('modal:open', stopAuto);
+        document.addEventListener('modal:close', startAuto);
     }
 
     // FAQ Accordion Logic

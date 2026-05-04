@@ -7,6 +7,11 @@ html {
        gets propagated and shows as a dark stripe next to every light section. */
     scrollbar-width: none;
     -ms-overflow-style: none;
+    /* Clip horizontal overflow at the root — body's overflow-x:hidden alone
+       isn't enough on some browsers (iOS Safari especially), and the polaroid
+       swipe animation + marquee can otherwise allow the page to scroll
+       horizontally a few px. */
+    overflow-x: clip;
 }
 
 html::-webkit-scrollbar,
@@ -187,36 +192,167 @@ body {
     transform: translateY(-7px) rotate(-45deg);
 }
 
-.mobile-nav {
-    display: none;
-    flex-direction: column;
-    background: rgba(255, 255, 255, 0.96);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border-top: 1px solid rgba(26, 10, 46, 0.08);
-    overflow: hidden;
-    max-height: 0;
-    transition: max-height 0.35s cubic-bezier(0.22, 1, 0.36, 1);
-}
-.mobile-nav.is-open {
-    display: flex;
-    max-height: 480px;
-}
-.mobile-nav a {
-    padding: 16px 24px;
-    color: var(--text-main);
-    text-decoration: none;
-    font-family: var(--font-labels);
-    font-weight: 600;
-    font-size: 1rem;
-    border-bottom: 1px solid rgba(26, 10, 46, 0.06);
-    transition: background 0.2s ease, color 0.2s ease;
-}
-.mobile-nav a:last-child { border-bottom: none; }
-.mobile-nav a:hover,
-.mobile-nav a:active {
-    background: rgba(139, 92, 246, 0.08);
-    color: var(--primary-purple);
+/* === Mobile side-drawer nav ============================================
+   Slides in from the right with brand-purple background, big bold links
+   and a "Free Audit" CTA at the bottom. Backdrop dismisses on tap.
+   Hidden on desktop entirely (display:none).
+   ===================================================================== */
+.mobile-nav-backdrop,
+.mobile-nav { display: none; }
+
+@media (max-width: 768px) {
+    .mobile-nav-backdrop {
+        display: block;
+        position: fixed;
+        inset: 0;
+        background: rgba(20, 8, 40, 0.55);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        opacity: 0;
+        visibility: hidden;
+        z-index: 1990;
+        transition: opacity 0.35s ease, visibility 0s linear 0.35s;
+    }
+    .mobile-nav-backdrop.is-open {
+        opacity: 1;
+        visibility: visible;
+        transition: opacity 0.35s ease;
+    }
+
+    .mobile-nav {
+        display: block;
+        position: fixed;
+        top: 0;
+        right: 0;
+        z-index: 1995;
+        width: min(86vw, 360px);
+        height: 100vh;
+        height: 100dvh;
+        background:
+            radial-gradient(circle at top right, rgba(255, 122, 89, 0.28), transparent 55%),
+            linear-gradient(180deg, #2A1340 0%, var(--bg-dark) 60%);
+        color: #fff;
+        transform: translateX(102%);
+        transition: transform 0.42s cubic-bezier(0.22, 1, 0.36, 1);
+        box-shadow: -16px 0 60px rgba(0, 0, 0, 0.5);
+        overflow-y: auto;
+        overscroll-behavior: contain;
+    }
+    .mobile-nav.is-open { transform: translateX(0); }
+
+    .mobile-nav-inner {
+        padding: 6.5rem 2rem 2.5rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+        position: relative;
+        height: 100%;
+        min-height: 100%;
+    }
+
+    .mobile-nav-eyebrow {
+        font-family: var(--font-labels);
+        font-size: 0.72rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.16em;
+        color: var(--accent-coral);
+        margin-bottom: 1.5rem;
+    }
+
+    .mobile-nav-links {
+        list-style: none;
+        margin: 0 0 auto 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 0.4rem;
+    }
+    .mobile-nav-links li { opacity: 0; transform: translateX(20px); }
+    .mobile-nav.is-open .mobile-nav-links li {
+        opacity: 1;
+        transform: translateX(0);
+        transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .mobile-nav.is-open .mobile-nav-links li:nth-child(1) { transition-delay: 0.18s; }
+    .mobile-nav.is-open .mobile-nav-links li:nth-child(2) { transition-delay: 0.24s; }
+    .mobile-nav.is-open .mobile-nav-links li:nth-child(3) { transition-delay: 0.30s; }
+    .mobile-nav.is-open .mobile-nav-links li:nth-child(4) { transition-delay: 0.36s; }
+    .mobile-nav.is-open .mobile-nav-links li:nth-child(5) { transition-delay: 0.42s; }
+
+    .mobile-nav-links a {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 18px 0;
+        color: #fff;
+        text-decoration: none;
+        font-family: var(--font-heading);
+        font-size: 1.7rem;
+        font-weight: 700;
+        line-height: 1.1;
+        letter-spacing: -0.01em;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        transition: color 0.2s ease, padding-left 0.25s ease;
+    }
+    .mobile-nav-links a span { font-size: 1.2rem; opacity: 0.4; transition: opacity 0.25s ease, transform 0.25s ease; }
+    .mobile-nav-links a:hover,
+    .mobile-nav-links a:active {
+        color: var(--accent-coral);
+        padding-left: 6px;
+    }
+    .mobile-nav-links a:hover span,
+    .mobile-nav-links a:active span {
+        opacity: 1;
+        transform: translateX(4px);
+    }
+
+    .mobile-nav-cta {
+        margin-top: 2.25rem;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--primary-purple);
+        color: #fff;
+        text-decoration: none;
+        font-family: var(--font-labels);
+        font-weight: 700;
+        font-size: 1rem;
+        padding: 16px 24px;
+        border-radius: 14px;
+        opacity: 0;
+        transform: translateY(12px);
+        box-shadow: 0 12px 28px rgba(139, 92, 246, 0.4);
+        transition: background 0.25s ease,
+                    transform 0.25s ease,
+                    opacity 0.5s ease;
+    }
+    .mobile-nav.is-open .mobile-nav-cta {
+        opacity: 1;
+        transform: translateY(0);
+        transition-delay: 0.5s;
+    }
+    .mobile-nav-cta:hover,
+    .mobile-nav-cta:active {
+        background: var(--secondary-purple);
+        transform: translateY(-2px);
+    }
+
+    .mobile-nav-flourish {
+        position: absolute;
+        bottom: 1.25rem;
+        right: 1.5rem;
+        font-size: 1.6rem;
+        color: var(--accent-coral);
+        opacity: 0.45;
+    }
+
+    /* When drawer is open, lock body scroll */
+    body.mobile-nav-open {
+        overflow: hidden;
+        position: fixed;
+        width: 100%;
+    }
 }
 
 /* ============================================
@@ -1025,7 +1161,12 @@ h2 {
         position: relative;
         padding: 0 38px;     /* leave horizontal room for the prev/next arrows */
         min-height: auto;
-        overflow: visible;
+        /* Clip the polaroid swipe animation so the card flying off to the
+           left doesn't briefly extend the document width during the exit
+           animation (caused horizontal scroll bug). Vertical overflow stays
+           visible so the avatar can protrude above the polaroid. */
+        overflow-x: clip;
+        overflow-y: visible;
         margin-top: 3rem;
     }
 
@@ -1395,11 +1536,15 @@ h2 {
 }
 
 /* Work Grid (Refined) */
-/* Reveal Animations & Staggering — Framer Style */
+/* Reveal Animations & Staggering — Framer Style.
+   More dramatic motion (60px lift, 0.9s) so the reveal is genuinely
+   visible as the section comes into view. */
 .reveal {
     opacity: 0;
-    transform: translateY(40px) scale(0.98);
-    transition: var(--transition-base);
+    transform: translateY(60px) scale(0.98);
+    transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: opacity, transform;
 }
 
 .reveal.active {
@@ -1409,13 +1554,21 @@ h2 {
 
 .reveal-child {
     opacity: 0;
-    transform: translateY(20px) scale(0.96);
-    transition: var(--transition-base);
+    transform: translateY(28px) scale(0.97);
+    transition: opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .reveal.active .reveal-child {
     opacity: 1;
     transform: translateY(0) scale(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .reveal, .reveal-child {
+        transition: opacity 0.3s ease;
+        transform: none !important;
+    }
 }
 
 /* Automatic Staggering for Children */
@@ -2018,12 +2171,50 @@ h2 {
 }
 
 /* Lock body scroll while modal is open (toggled by JS) */
-body.modal-open { overflow: hidden; }
+/* Body lock: position:fixed prevents the page behind the modal from
+   scrolling/jumping. JS saves the scrollY before locking and restores
+   it on close (otherwise locking would visually jump to the top). */
+body.modal-open {
+    overflow: hidden;
+    position: fixed;
+    width: 100%;
+    left: 0;
+    right: 0;
+}
 
+/* Mobile: bottom-sheet style modal that slides up — feels native
+   and gives the keyboard a stable spot to push from when it appears. */
 @media (max-width: 640px) {
-    .modal { padding: 1rem; }
-    .modal-panel { padding: 2.5rem 1.25rem 1.5rem; border-radius: 22px; }
+    .modal {
+        padding: 0;
+        align-items: flex-end;     /* anchor sheet to the bottom */
+    }
+    .modal-panel {
+        padding: 2rem 1.25rem 2.25rem;
+        max-width: 100%;
+        max-height: 92vh;
+        border-radius: 28px 28px 0 0;
+        transform: translateY(100%);  /* start fully off-screen below */
+        transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .modal.is-open .modal-panel { transform: translateY(0); }
     .modal-title { font-size: 1.4rem; }
+
+    /* Drag-handle visual at the top of the sheet — signals "this is a sheet
+       you can dismiss". Pure decoration; closing still uses backdrop / X. */
+    .modal-panel::before {
+        content: '';
+        display: block;
+        width: 42px;
+        height: 4px;
+        border-radius: 999px;
+        background: rgba(26, 10, 46, 0.18);
+        margin: -0.5rem auto 1.25rem;
+    }
+    .modal-close {
+        top: 0.75rem;
+        right: 0.75rem;
+    }
 }
 
 .footer-bottom-row {
