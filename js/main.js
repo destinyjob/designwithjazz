@@ -171,6 +171,31 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // Mobile hamburger toggle
+    const burger    = document.getElementById('header-burger');
+    const mobileNav = document.getElementById('mobile-nav');
+    if (burger && mobileNav) {
+        const closeNav = () => {
+            burger.setAttribute('aria-expanded', 'false');
+            mobileNav.classList.remove('is-open');
+            mobileNav.setAttribute('aria-hidden', 'true');
+        };
+        const openNav = () => {
+            burger.setAttribute('aria-expanded', 'true');
+            mobileNav.classList.add('is-open');
+            mobileNav.setAttribute('aria-hidden', 'false');
+        };
+        burger.addEventListener('click', () => {
+            mobileNav.classList.contains('is-open') ? closeNav() : openNav();
+        });
+        // Close menu when any nav link is tapped
+        mobileNav.querySelectorAll('a').forEach(a => a.addEventListener('click', closeNav));
+        // ESC also closes
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && mobileNav.classList.contains('is-open')) closeNav();
+        });
+    }
+
     // Floating Navigation - Enhanced Smoothness
     const navLinks = document.querySelectorAll('.floating-nav a');
     const sections = document.querySelectorAll('section');
@@ -354,6 +379,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const quoteText = reviewsWrap.querySelector('#reviews-quote-text');
         const nameEl    = reviewsWrap.querySelector('#reviews-quote-name');
         const roleEl    = reviewsWrap.querySelector('#reviews-quote-role');
+        const avatarEl  = reviewsWrap.querySelector('#reviews-quote-avatar');
         const footerEl  = reviewsWrap.querySelector('.reviews-quote-footer');
         const counterEl = reviewsWrap.querySelector('#reviews-counter-current');
         const totalEl   = reviewsWrap.querySelector('#reviews-counter-total');
@@ -408,6 +434,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 quoteText.textContent = target.dataset.quote || '';
                 nameEl.textContent    = target.dataset.name  || '';
                 roleEl.textContent    = target.dataset.role  || '';
+                if (avatarEl) {
+                    const targetImg = target.querySelector('.review-person-avatar img');
+                    if (targetImg) {
+                        avatarEl.src = targetImg.src;
+                        avatarEl.alt = targetImg.alt;
+                    }
+                }
                 if (counterEl) counterEl.textContent = String(next + 1).padStart(2, '0');
 
                 requestAnimationFrame(() => {
