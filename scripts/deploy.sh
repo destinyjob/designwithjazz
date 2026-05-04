@@ -40,7 +40,7 @@ if [ "${1:-}" = "--dry-run" ]; then
     echo ""
     echo "→ DRY-RUN — files that would be uploaded:"
     echo ""
-    tar "${EXCLUDES[@]}" -cvf /dev/null index.html css js images 2>&1 | sed 's/^/  /'
+    tar "${EXCLUDES[@]}" -cvf /dev/null .htaccess index.html css js images 2>&1 | sed 's/^/  /'
     echo ""
     echo "(re-run without --dry-run to actually deploy)"
     exit 0
@@ -51,7 +51,7 @@ echo "→ Deploying to $REMOTE_ALIAS:$REMOTE_PATH"
 echo "  Streaming tarball over SSH..."
 echo ""
 
-tar "${EXCLUDES[@]}" -czf - index.html css js images \
+tar "${EXCLUDES[@]}" -czf - .htaccess index.html css js images \
     | ssh "$REMOTE_ALIAS" "tar -xzf - -C '$REMOTE_PATH' && \
         find '$REMOTE_PATH' -type f -exec chmod 644 {} + && \
         find '$REMOTE_PATH' -type d -exec chmod 755 {} +"

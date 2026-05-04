@@ -1,0 +1,12 @@
+# Canonicalize: apex -> www, HTTP -> HTTPS
+RewriteEngine On
+
+# 1. Send bare apex straight to https://www so visitors who type
+#    "designwithjazz.com" never see a cert error (since the cert
+#    only covers www.). This must come before the HTTP->HTTPS rule.
+RewriteCond %{HTTP_HOST} ^designwithjazz\.com$ [NC]
+RewriteRule ^(.*)$ https://www.designwithjazz.com/$1 [L,R=301]
+
+# 2. Force HTTPS for everything else (i.e., http://www -> https://www)
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
