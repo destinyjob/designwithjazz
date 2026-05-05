@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Caveat:wght@400..700&family=Inter+Tight:ital,wght@0,100..900;1,100..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Caveat:wght@400..700&family=Inter+Tight:ital,wght@0,100..900;1,100..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Italiana&family=Cormorant+Garamond:wght@300;400;500;600;700&display=swap');
 
 html {
     scroll-behavior: smooth;
@@ -26,7 +26,10 @@ body::-webkit-scrollbar {
     --font-heading: 'Bricolage Grotesque', sans-serif;
     --font-labels: 'Inter Tight', sans-serif;
     --font-body: 'Inter', sans-serif;
-    --font-logo: 'Caveat', cursive;
+    /* Brown Carolina Sans is the intended logo font (paid foundry).
+       Falls back to Italiana / Cormorant Garamond which share the
+       elegant tall display proportions if the font isn't installed. */
+    --font-logo: 'Brown Carolina Sans', 'Italiana', 'Cormorant Garamond', serif;
     
     --border-radius-xl: 32px;
     --border-radius-lg: 24px;
@@ -119,10 +122,13 @@ main.slab-container { overflow-x: clip; }
 
 .header-logo {
     font-family: var(--font-logo);
-    font-size: 2.1rem;
-    color: var(--primary-purple);
+    font-size: 1.6rem;
+    color: var(--text-main);
     text-decoration: none;
-    font-weight: 700;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    line-height: 1;
 }
 
 .header-right {
@@ -346,14 +352,6 @@ main.slab-container { overflow-x: clip; }
         transform: translateY(-2px);
     }
 
-    .mobile-nav-flourish {
-        position: absolute;
-        bottom: 1.25rem;
-        right: 1.5rem;
-        font-size: 1.6rem;
-        color: var(--accent-coral);
-        opacity: 0.45;
-    }
 
     /* When drawer is open, lock body scroll */
     body.mobile-nav-open {
@@ -1498,18 +1496,6 @@ h2 {
     padding-bottom: 2rem;
 }
 
-/* Quote Patterns */
-.quote-mark {
-    font-size: 5rem;
-    font-family: var(--font-logo);
-    line-height: 1;
-    margin-bottom: -1rem;
-    display: block;
-}
-
-.quote-mark--purple { color: var(--primary-purple); }
-.quote-mark--coral { color: var(--accent-coral); }
-.quote-mark--gold { color: var(--accent-gold); }
 
 /* Avatar Circle */
 .avatar-circle {
@@ -2110,9 +2096,11 @@ body.modal-open {
 
 .footer-brand {
     font-family: var(--font-logo);
-    font-size: 1.35rem;
+    font-size: 1.2rem;
     color: #fff;
-    font-weight: 600;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
 }
 
 .footer-nav-links {
@@ -2252,11 +2240,6 @@ body.modal-open {
     gap: 2rem;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-}
-
-.marquee-icon {
-    color: var(--primary-purple);
-    font-size: 1.2rem;
 }
 
 @keyframes scroll-marquee {
@@ -3316,41 +3299,12 @@ section#process.slab {
     transform-origin: center center;
 }
 
-/* Sparkle / badge elements "carried" by a hand */
-.hand-carry {
-    position: absolute;
-    pointer-events: none;
-    user-select: none;
-    z-index: 11;
-    font-weight: 900;
-    line-height: 1;
-    color: var(--primary-purple, #7a4dfc);
-    text-shadow:
-        0 3px 0 rgba(10, 10, 10, 0.85),
-        0 10px 20px rgba(122, 77, 252, 0.35);
-    transform-origin: center center;
-}
-
 /* Hero stat card - pointing-down hand with cuff drops in from the top of the card */
 .hand-stat {
     top: -60px;
     right: -15px;
     width: 115px;
     animation: handStatBob 4.5s ease-in-out infinite;
-}
-
-/* Process section - reaching hand, sleeve extends off the left edge of the viewport */
-.hand-process {
-    left: -30px;
-    top: 30px;
-    width: 240px;
-    animation: handProcessBob 5s ease-in-out infinite;
-}
-.hand-carry-process {
-    left: 190px;
-    top: 70px;
-    font-size: 72px;
-    animation: sparkleSpin 6s linear infinite;
 }
 
 /* Services section - pointing-down hand highlights the elevated middle card */
@@ -3360,14 +3314,6 @@ section#process.slab {
     width: 110px;
     animation: handServicesBob 4.5s ease-in-out infinite;
 }
-.hand-carry-services {
-    top: 170px;
-    left: calc(50% + 40px);
-    font-size: 42px;
-    color: var(--accent-coral, #ff7a59);
-    animation: sparkleSpin 5s linear infinite reverse;
-}
-
 /* Testimonials - thumbs-up, sleeve extends off the right edge of the viewport */
 .hand-testimonials {
     top: 40px;
@@ -3391,10 +3337,6 @@ section#process.slab {
     0%, 100% { transform: translateY(0) rotate(-8deg); }
     50%      { transform: translateY(-6px) rotate(-4deg); }
 }
-@keyframes handProcessBob {
-    0%, 100% { transform: translateY(0) scaleX(-1) rotate(-8deg); }
-    50%      { transform: translateY(-8px) scaleX(-1) rotate(-12deg); }
-}
 @keyframes handServicesBob {
     0%, 100% { transform: translateY(0) rotate(6deg); }
     50%      { transform: translateY(-6px) rotate(-4deg); }
@@ -3407,12 +3349,6 @@ section#process.slab {
     0%, 100% { transform: translate(0, 0) rotate(55deg); }
     50%      { transform: translate(-4px, 4px) rotate(62deg); }
 }
-@keyframes sparkleSpin {
-    0%   { transform: rotate(0deg) scale(1); }
-    50%  { transform: rotate(180deg) scale(1.18); }
-    100% { transform: rotate(360deg) scale(1); }
-}
-
 /* Section edge-clip handling: ensure the containing sections don't clip the sleeves */
 #testimonials {
     overflow: hidden;
@@ -3424,19 +3360,12 @@ section#process.slab {
 
 /* Respect reduced motion preferences */
 @media (prefers-reduced-motion: reduce) {
-    .hand-accent,
-    .hand-carry {
+    .hand-accent {
         animation: none !important;
     }
 }
 
 @media (max-width: 768px) {
-    /* Big sleeved hands that don't fit the mobile flow - keep these hidden */
-    .hand-process,
-    .hand-carry-process,
-    .hand-carry-services {
-        display: none;
-    }
     /* Stat hand - sits inside the stat card on mobile so it doesn't
        reach over and overlap Jasmine's portrait above it. */
     .hand-stat {
@@ -3624,20 +3553,6 @@ section#process.slab {
     pointer-events: none;
 }
 
-.vc-flourish {
-    position: absolute;
-    top: 1.25rem;
-    right: 1.5rem;
-    display: inline-block;
-    color: var(--primary-purple);
-    font-size: 1.4rem;
-    transform-origin: center;
-    animation: vcSpin 18s linear infinite;
-}
-@keyframes vcSpin {
-    to { transform: rotate(360deg); }
-}
-
 .vc-counter {
     font-family: var(--font-heading);
     font-weight: 300;
@@ -3707,27 +3622,17 @@ section#process.slab {
     align-items: center;
     gap: 0.6rem;
     align-self: flex-start;
-    position: relative;
     transition: color 0.2s ease, gap 0.2s ease;
 }
-.vc-expand-link::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    bottom: -4px;
-    width: 100%;
-    height: 1.5px;
-    background: var(--primary-purple);
-    transform: scaleX(0.4);
-    transform-origin: left;
-    transition: transform 0.3s ease;
+.vc-expand-link svg {
+    transition: transform 0.25s ease;
 }
 .vc-expand-link:hover {
     gap: 0.85rem;
     color: var(--primary-purple);
 }
-.vc-expand-link:hover::after {
-    transform: scaleX(1);
+.vc-expand-link:hover svg {
+    transform: translateX(4px);
 }
 
 /* Thumbnail strip */
@@ -3869,7 +3774,7 @@ section#process.slab {
     .top-header.scrolled { padding: 0.7rem 0; }
     .header-inner { padding: 0 18px; }
     .header-nav { display: none; }
-    .header-logo { font-size: 1.65rem; }
+    .header-logo { font-size: 1.25rem; letter-spacing: 0.06em; }
     .header-right { gap: 0; align-items: center; }
     .header-cta {
         padding: 11px 18px;
@@ -3995,7 +3900,6 @@ section#process.slab {
         font-size: 1rem;
         gap: 0.75rem;
     }
-    .marquee-icon { font-size: 0.7rem; }
 
     /* =========================================================
        MOBILE TYPOGRAPHY HIERARCHY & SPACING
@@ -4167,7 +4071,6 @@ section#process.slab {
     .vc-panel-body { margin-top: 1rem; }
     .vc-counter { font-size: 1.7rem; }
     .vc-counter-sep, .vc-counter-total { font-size: 1.1rem; }
-    .vc-flourish { display: none; }
     .vc-title { font-size: 1.25rem; line-height: 1.2; }
     .vc-desc { font-size: 0.92rem; line-height: 1.5; }
     .vc-expand-link {
@@ -4466,14 +4369,9 @@ section#process.slab {
     }
     .footer-nav-links a { font-size: 0.78rem; }
     .footer-copy { font-size: 0.72rem; }
-    /* Hand-cta repositioned so it doesn't fight the full-width button */
-    .hand-cta {
-        bottom: auto !important;
-        top: -25px !important;
-        right: 8px !important;
-        left: auto !important;
-        width: 75px !important;
-    }
+    /* Hand-cta hidden on mobile — full-width purple button doesn't leave
+       room for it without overlapping either the heading or the button. */
+    .hand-cta { display: none !important; }
 
     /* ---------- Footer breathing room on mobile ---------- */
     section#contact.slab {
@@ -4485,7 +4383,7 @@ section#process.slab {
    Very small phones (≤380px) - extra tightening
    ============================================ */
 @media (max-width: 380px) {
-    .header-logo { font-size: 1.5rem; }
+    .header-logo { font-size: 1.1rem; letter-spacing: 0.06em; }
     .header-cta {
         padding: 9px 14px;
         font-size: 0.78rem;
