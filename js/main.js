@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     // ============================================================
-    // CONTACT MODAL — opened by [data-open-modal="contact"] OR by
+    // CONTACT MODAL - opened by [data-open-modal="contact"] OR by
     // any anchor whose href is "#contact". ESC and backdrop click
     // close it. Body scroll is locked while open.
     // ============================================================
@@ -41,9 +41,9 @@ document.addEventListener('DOMContentLoaded', () => {
             document.body.classList.add('modal-open');
             // Notify the page (testimonial auto-rotate listens for this)
             document.dispatchEvent(new CustomEvent('modal:open'));
-            // Don't auto-focus on mobile — it pops the keyboard up immediately
+            // Don't auto-focus on mobile - it pops the keyboard up immediately
             // and feels aggressive. Desktop still focuses for fast typing.
-            // Use viewport width as the proxy — width-based is reliable across
+            // Use viewport width as the proxy - width-based is reliable across
             // browsers, while `(hover: none)` isn't always set even on touch.
             const isMobile = matchMedia('(max-width: 880px)').matches;
             if (!isMobile) {
@@ -58,7 +58,7 @@ document.addEventListener('DOMContentLoaded', () => {
             contactModal.classList.remove('is-open');
             contactModal.setAttribute('aria-hidden', 'true');
             document.body.classList.remove('modal-open');
-            // Restore scroll position INSTANTLY — html has scroll-behavior:
+            // Restore scroll position INSTANTLY - html has scroll-behavior:
             // smooth which would otherwise animate the restore as a visible
             // scroll-back-up.
             document.body.style.top = '';
@@ -79,14 +79,14 @@ document.addEventListener('DOMContentLoaded', () => {
             if (fullName) params.set('name', fullName);
             if (email)    params.set('email', email);
             // Pass the service + message as Calendly custom answers (a1, a2)
-            // — these only show up if Jasmine has those questions set up in
+            // - these only show up if Jasmine has those questions set up in
             // her Calendly event, otherwise they're silently ignored.
             if (data.service) params.set('a1', data.service);
             if (data.message) params.set('a2', data.message.slice(0, 500));
             return CALENDLY_BASE + '?' + params.toString();
         };
 
-        // Intercept form submission — send via FormSubmit AJAX, then show success state
+        // Intercept form submission - send via FormSubmit AJAX, then show success state
         if (form) {
             form.addEventListener('submit', async (e) => {
                 e.preventDefault();
@@ -118,7 +118,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     submitBtn.disabled = false;
                     submitBtn.textContent = 'Try again';
                     console.error('Contact form submission failed:', err);
-                    alert("Couldn't send that — please try again, or email hello@thatcanvagirl.com directly.");
+                    alert("Couldn't send that - please try again, or email hello@thatcanvagirl.com directly.");
                 }
             });
         }
@@ -145,8 +145,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Scroll Reveal Observer with Stagger Support
     const observerOptions = {
-        // Fire when the section is meaningfully visible — 12% in view AND
-        // crossed 120px past the bottom edge — so the reveal animation
+        // Fire when the section is meaningfully visible - 12% in view AND
+        // crossed 120px past the bottom edge - so the reveal animation
         // actually plays where the user can see it (was firing too early).
         threshold: 0.12,
         rootMargin: '0px 0px -120px 0px'
@@ -247,43 +247,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Floating Navigation - Enhanced Smoothness
-    const navLinks = document.querySelectorAll('.floating-nav a');
-    const sections = document.querySelectorAll('section');
-
-    function updateActiveNav() {
-        let current = '';
-        const scrollY = window.scrollY;
-        
-        sections.forEach(section => {
-            const sectionTop = section.offsetTop;
-            const sectionHeight = section.clientHeight;
-            // Adjust offset logic for better center-screen detection
-            if (scrollY >= (sectionTop - window.innerHeight * 0.4)) {
-                current = section.getAttribute('id');
-            }
-        });
-
-        navLinks.forEach(link => {
-            link.classList.remove('active');
-            if (link.getAttribute('href').includes(current)) {
-                link.classList.add('active');
-            }
-        });
-    }
-
-    // Rate limit scroll event for performance
-    let scrollTimeout;
-    window.addEventListener('scroll', () => {
-        if (!scrollTimeout) {
-            scrollTimeout = setTimeout(() => {
-                updateActiveNav();
-                scrollTimeout = null;
-            }, 10);
-        }
-    });
-
-    // Smooth Scroll for anchor links (skip #contact — that opens the modal)
+    // Smooth Scroll for anchor links (skip #contact - that opens the modal)
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
             const href = this.getAttribute('href');
@@ -313,7 +277,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const processDots    = document.querySelectorAll('.process-progress-dot');
 
     // On mobile we use CSS sticky stacked cards; the wave/scroll-jack
-    // is a desktop-only effect — skip the entire init below to avoid
+    // is a desktop-only effect - skip the entire init below to avoid
     // wasted 60fps work and to keep inline transforms off the cards
     // (sticky positioning needs an unmodified transform).
     const isProcessNarrow = matchMedia('(max-width: 768px)').matches;
@@ -323,7 +287,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const WAVE_SPEED   = 0.0018;
         const PHASE_OFFSET = 0.5;
-        const REST_AMP     = 18;   // gentle float — keeps hand visually on card
+        const REST_AMP     = 18;   // gentle float - keeps hand visually on card
         const REST_ROT     = 3;    // subtle tilt
         const DAMP_FACTOR  = 0.08;
 
@@ -331,14 +295,14 @@ document.addEventListener('DOMContentLoaded', () => {
         const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
 
         let activeIdx  = 0;
-        let currentTx  = 0;    // smoothed track x — lerped toward target each frame
+        let currentTx  = 0;    // smoothed track x - lerped toward target each frame
         const LERP        = 0.28; // track-follow responsiveness; higher = snappier.
-                                  // Was 0.14 — too laggy on fast trackpad scroll, the
+                                  // Was 0.14 - too laggy on fast trackpad scroll, the
                                   // track would still be mid-animation when the user
                                   // scrolled past the section, so step 9 never fully showed.
         const DEAD_ZONE   = 0.04; // hold the track still for the first/last 4% of scroll
                                   // so step 1 / step 9 get a brief breath before the pin
-                                  // releases. Was 0.08 — felt cramped at both ends.
+                                  // releases. Was 0.08 - felt cramped at both ends.
 
         function tick(time) {
             // -- 1. SCROLL PROGRESS -----------------------------------------
@@ -437,6 +401,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const items     = Array.from(list.querySelectorAll('.review-person'));
         const quoteBox  = reviewsWrap.querySelector('#reviews-quote');
         const quoteText = reviewsWrap.querySelector('#reviews-quote-text');
+        const readMoreBtn = reviewsWrap.querySelector('#reviews-readmore-btn');
         const nameEl    = reviewsWrap.querySelector('#reviews-quote-name');
         const roleEl    = reviewsWrap.querySelector('#reviews-quote-role');
         const avatarEl  = reviewsWrap.querySelector('#reviews-quote-avatar');
@@ -476,7 +441,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         };
 
-        // Helper — actually swap the displayed content to the target index
+        // Helper - actually swap the displayed content to the target index
         const swapContent = (idx) => {
             const t = items[idx];
             if (!t) return;
@@ -488,6 +453,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (ti) { avatarEl.src = ti.src; avatarEl.alt = ti.alt; }
             }
             if (counterEl) counterEl.textContent = String(idx + 1).padStart(2, '0');
+
+            // Reset to clamped state and re-evaluate "Read more" visibility.
+            // Need to wait a frame so the browser applies the new text + clamp
+            // before we measure scrollHeight vs clientHeight.
+            if (readMoreBtn) {
+                quoteBox.classList.remove('is-expanded');
+                readMoreBtn.textContent = 'Read more';
+                readMoreBtn.hidden = true;
+                requestAnimationFrame(() => {
+                    const overflows = quoteText.scrollHeight - quoteText.clientHeight > 1;
+                    readMoreBtn.hidden = !overflows;
+                });
+            }
         };
 
         const sideEl = quoteBox.closest('.reviews-quote-side');
@@ -503,7 +481,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const isMobile = matchMedia('(max-width: 880px)').matches;
 
             if (isMobile && sideEl) {
-                // Mobile: physical card-swipe — current polaroid swipes off
+                // Mobile: physical card-swipe - current polaroid swipes off
                 // to the left, the new one slides in from the right
                 const EXIT_MS = 320;
                 const ENTER_MS = 420;
@@ -538,7 +516,22 @@ document.addEventListener('DOMContentLoaded', () => {
         // initial assignment so the 3 visible slots start in the right places
         applyWheelPositions(active);
 
-        // Mobile prev/next arrows — manual testimonial navigation
+        // Read more / show less for the first-loaded testimonial. Subsequent
+        // swaps are handled inside swapContent().
+        if (readMoreBtn) {
+            readMoreBtn.addEventListener('click', () => {
+                const expanded = quoteBox.classList.toggle('is-expanded');
+                readMoreBtn.textContent = expanded ? 'Show less' : 'Read more';
+                if (expanded) stopAuto();
+                else startAuto();
+            });
+            requestAnimationFrame(() => {
+                const overflows = quoteText.scrollHeight - quoteText.clientHeight > 1;
+                readMoreBtn.hidden = !overflows;
+            });
+        }
+
+        // Mobile prev/next arrows - manual testimonial navigation
         sideEl?.querySelectorAll('.reviews-arrow').forEach((btn) => {
             const dir = btn.classList.contains('reviews-arrow--next') ? 1 : -1;
             btn.addEventListener('click', () => {
@@ -586,7 +579,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }, { threshold: 0.25 });
         rotateObserver.observe(reviewsWrap);
 
-        // Pause auto-rotate while the contact modal is open — the polaroid
+        // Pause auto-rotate while the contact modal is open - the polaroid
         // swipe animations behind the modal can otherwise cause subtle layout
         // jitter and waste CPU.
         document.addEventListener('modal:open', stopAuto);
@@ -634,7 +627,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 title: 'LinkedIn Profile Redesign',
                 badge: 'Optimization',
                 cls: 'badge--purple',
-                desc: 'Every word crafted to speak directly to your ideal client. Positioning, SEO, visuals — all of it working together so premium clients stop bouncing and start reaching out.'
+                desc: 'Every word crafted to speak directly to your ideal client. Positioning, SEO, visuals - all of it working together so premium clients stop bouncing and start reaching out.'
             },
             {
                 title: 'Scroll-Stopping Carousels',
@@ -652,7 +645,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 title: 'Flyers and Posters',
                 badge: 'Campaigns',
                 cls: 'badge--blue',
-                desc: 'On-brand campaign visuals that make people think "this person is the real deal" — even before they read a single word of your copy.'
+                desc: 'On-brand campaign visuals that make people think "this person is the real deal" - even before they read a single word of your copy.'
             }
         ];
         const badgeVariants = ['badge--purple', 'badge--coral', 'badge--gold', 'badge--blue'];
@@ -684,17 +677,53 @@ document.addEventListener('DOMContentLoaded', () => {
             }, 200);
         };
 
-        prevBtn.addEventListener('click', () => setSlide(idx - 1));
-        nextBtn.addEventListener('click', () => setSlide(idx + 1));
-        thumbs.forEach(t => t.addEventListener('click', () => setSlide(parseInt(t.dataset.i, 10))));
+        // Auto-advance - most users don't realize the carousel is interactive,
+        // so it rotates on its own and pauses on hover/focus or while the
+        // lightbox or contact modal is open. User input restarts the timer.
+        let autoTimer = null;
+        const ROTATE_MS = 5500;
+        const startAuto = () => {
+            stopAuto();
+            autoTimer = setInterval(() => setSlide(idx + 1), ROTATE_MS);
+        };
+        const stopAuto = () => {
+            if (autoTimer) { clearInterval(autoTimer); autoTimer = null; }
+        };
+        const restartAuto = () => { stopAuto(); startAuto(); };
+
+        prevBtn.addEventListener('click', () => { setSlide(idx - 1); restartAuto(); });
+        nextBtn.addEventListener('click', () => { setSlide(idx + 1); restartAuto(); });
+        thumbs.forEach(t => t.addEventListener('click', () => {
+            setSlide(parseInt(t.dataset.i, 10));
+            restartAuto();
+        }));
 
         // Touch swipe on stage
         let touchStartX = 0;
         stage.addEventListener('touchstart', (e) => { touchStartX = e.touches[0].clientX; }, { passive: true });
         stage.addEventListener('touchend', (e) => {
             const dx = e.changedTouches[0].clientX - touchStartX;
-            if (Math.abs(dx) > 40) setSlide(idx + (dx < 0 ? 1 : -1));
+            if (Math.abs(dx) > 40) { setSlide(idx + (dx < 0 ? 1 : -1)); restartAuto(); }
         });
+
+        // Pause while hovering or focused, resume on leave
+        carousel.addEventListener('mouseenter', stopAuto);
+        carousel.addEventListener('mouseleave', startAuto);
+        carousel.addEventListener('focusin',  stopAuto);
+        carousel.addEventListener('focusout', startAuto);
+
+        // Only auto-rotate while the section is in view
+        const carouselObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) startAuto();
+                else stopAuto();
+            });
+        }, { threshold: 0.25 });
+        carouselObserver.observe(carousel);
+
+        // Pause while contact modal or lightbox is open
+        document.addEventListener('modal:open', stopAuto);
+        document.addEventListener('modal:close', startAuto);
 
         // Lightbox
         const lb = document.getElementById('vc-lightbox');
@@ -709,11 +738,13 @@ document.addEventListener('DOMContentLoaded', () => {
             lb.classList.add('is-open');
             lb.setAttribute('aria-hidden', 'false');
             document.body.style.overflow = 'hidden';
+            stopAuto();
         };
         const closeLb = () => {
             lb.classList.remove('is-open');
             lb.setAttribute('aria-hidden', 'true');
             document.body.style.overflow = '';
+            startAuto();
         };
         const stepLb = (dir) => {
             setSlide(idx + dir);
