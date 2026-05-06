@@ -3,6 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Force always-revalidate on the HTML so deploys are visible without
+         a hard refresh. Belt-and-suspenders alongside the .htaccess rule
+         (LiteSpeed sometimes strips server-set Cache-Control headers). -->
+    <meta http-equiv="Cache-Control" content="no-cache, must-revalidate, max-age=0">
     <title>LinkedIn Brand Strategy & Profile Design | Jasmine Gathoga</title>
     <meta name="description" content="LinkedIn brand strategy and profile design that gets consultants and service providers paid, not just liked. 100+ profiles designed worldwide. Free audit available.">
     <meta name="author" content="Jasmine Gathoga">
