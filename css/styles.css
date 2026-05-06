@@ -140,15 +140,13 @@ main.slab-container { overflow-x: clip; }
 
 .header-logo {
     font-family: var(--font-logo);
-    font-size: 2.4rem;
+    font-size: 1.85rem;
     color: var(--text-main);
     text-decoration: none;
     font-weight: 400;
     letter-spacing: 0.005em;
     text-transform: uppercase;
     line-height: 1;
-    /* Brown Carolina Sans is a single-weight display face; size carries
-       the visual weight, so go bigger than a typical sans-serif logo. */
 }
 
 .header-right {
@@ -3796,7 +3794,7 @@ section#process.slab {
     .top-header.scrolled { padding: 0.7rem 0; }
     .header-inner { padding: 0 18px; }
     .header-nav { display: none; }
-    .header-logo { font-size: 1.7rem; letter-spacing: 0.005em; }
+    .header-logo { font-size: 1.4rem; letter-spacing: 0.005em; }
     .header-right { gap: 0; align-items: center; }
     .header-cta {
         padding: 11px 18px;
@@ -4405,7 +4403,7 @@ section#process.slab {
    Very small phones (≤380px) - extra tightening
    ============================================ */
 @media (max-width: 380px) {
-    .header-logo { font-size: 1.5rem; letter-spacing: 0.005em; }
+    .header-logo { font-size: 1.25rem; letter-spacing: 0.005em; }
     .header-cta {
         padding: 9px 14px;
         font-size: 0.78rem;
