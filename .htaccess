@@ -36,20 +36,22 @@ RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
     ExpiresByType application/javascript    "access plus 1 year"
 </IfModule>
 
-# 4. HTML must always re-validate so visitors get the latest ?v=tokens
+# 4. HTML must always re-validate so visitors get the latest ?v= tokens
 #    (which then trigger fresh CSS/JS loads). Browsers still get a cached
 #    copy when the server returns 304 Not Modified, so this is fast - it
 #    just guarantees you'll never see a stale page after a deploy.
-<IfModule mod_headers.c>
-    <FilesMatch "\.(html|htm)$">
-        Header set Cache-Control "no-cache, must-revalidate, max-age=0"
-    </FilesMatch>
-    # The site root (/) is also HTML but matches no extension; force the
-    # same policy via the directory index alias.
-    <FilesMatch "^index\.html$">
-        Header set Cache-Control "no-cache, must-revalidate, max-age=0"
-    </FilesMatch>
-</IfModule>
+#
+#    No <IfModule> wrapper because LiteSpeed identifies as a different
+#    module name and the conditional silently no-ops on this host.
+#    "Header always" applies even on non-2xx responses too.
+<FilesMatch "\.(html|htm)$">
+    Header always set Cache-Control "no-cache, must-revalidate, max-age=0"
+    Header always set Pragma "no-cache"
+    Header always set Expires "0"
+</FilesMatch>
+<FilesMatch "^index\.html$">
+    Header always set Cache-Control "no-cache, must-revalidate, max-age=0"
+</FilesMatch>
 
 # 5. Gzip/deflate text-based responses on the wire.
 <IfModule mod_deflate.c>
