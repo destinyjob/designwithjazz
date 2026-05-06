@@ -1,5 +1,23 @@
 @import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Caveat:wght@400..700&family=Inter+Tight:ital,wght@0,100..900;1,100..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Italiana&family=Cormorant+Garamond:wght@300;400;500;600;700&display=swap');
 
+/* Brown Carolina Duo - the logo font (paid foundry, served locally).
+   font-display: swap so the page renders immediately with a fallback,
+   then upgrades to Brown Carolina once the .otf finishes loading. */
+@font-face {
+    font-family: 'Brown Carolina Sans';
+    src: url('../fonts/brown-carolina-sans.otf') format('opentype');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'Brown Carolina Script';
+    src: url('../fonts/brown-carolina-script.otf') format('opentype');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
 html {
     scroll-behavior: smooth;
     /* Hide the page scrollbar. Without this, the 15px scrollbar gutter reserves
