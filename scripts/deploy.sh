@@ -6,20 +6,28 @@
 #   ./scripts/deploy.sh --dry-run # lists files that would be uploaded
 #
 # Approach:
-#   Pipes a compressed tar stream of (index.html + css/ + js/ + images/)
-#   over a single SSH session and untars it directly into the web root.
-#   One SSH connection, gzip on the wire, no rsync dependency required.
+#   - Auto-stamps a fresh cache-bust token (current git short SHA) into
+#     index.html's CSS/JS <link>/<script> ?v=... query strings, so every
+#     deploy yields a new URL for the assets and clients fetch fresh
+#     files automatically. No manual cache-bumping needed.
+#   - Streams a gzipped tarball over a single SSH session and untars it
+#     directly into the web root. One SSH connection, gzip on the wire,
+#     no rsync dependency required.
 #
 # Caveats:
 #   - Does NOT delete orphaned files on the server (tar only adds/overwrites).
 #     If you remove a file locally, also delete it on the server manually
 #     or do a one-time `ssh jasmine-deploy "rm -rf .../public_html/*"` first.
-#   - Not atomic mid-deploy — if interrupted, you may have a partial state.
+#   - Not atomic mid-deploy - if interrupted, you may have a partial state.
 #     Fine for a portfolio; harden later if traffic warrants it.
+#   - The cache-bust step modifies index.html on disk, then restores it
+#     from a backup on exit (even if interrupted). The repo's index.html
+#     keeps a stable ?v=... token; only the deployed copy is freshly
+#     stamped.
 #
 # Requires:
 #   - The "jasmine-deploy" SSH alias from ~/.ssh/config
-#   - tar + ssh (both ship with Git Bash and every Unix)
+#   - tar + ssh + sed (all ship with Git Bash and every Unix)
 
 set -euo pipefail
 
@@ -38,9 +46,15 @@ EXCLUDES=(
 
 PAYLOAD=(.htaccess robots.txt sitemap.xml index.html css js images fonts)
 
+# Cache-bust token. Prefer the current git short SHA so every commit
+# gets a unique token; fall back to a unix timestamp if git isn't
+# available for any reason.
+VERSION="$(git rev-parse --short HEAD 2>/dev/null || date +%s)"
+
 if [ "${1:-}" = "--dry-run" ]; then
     echo ""
-    echo "→ DRY-RUN — files that would be uploaded:"
+    echo "→ DRY-RUN - files that would be uploaded:"
+    echo "  Cache-bust token would be: ?v=$VERSION"
     echo ""
     tar "${EXCLUDES[@]}" -cvf /dev/null "${PAYLOAD[@]}" 2>&1 | sed 's/^/  /'
     echo ""
@@ -50,8 +64,18 @@ fi
 
 echo ""
 echo "→ Deploying to $REMOTE_ALIAS:$REMOTE_PATH"
+echo "  Cache-bust token: ?v=$VERSION"
 echo "  Streaming tarball over SSH..."
 echo ""
+
+# Stamp the version into index.html (with a backup so we always restore
+# on exit, even if ssh dies mid-stream). This way the file in the repo
+# stays at whatever ?v=... it was committed with, but the deployed copy
+# always carries the current SHA.
+cp index.html index.html.deploy.bak
+trap 'mv -f index.html.deploy.bak index.html 2>/dev/null || true' EXIT
+sed -i.tmp -E "s|(styles\.css\?v=)[^\"']+|\1$VERSION|g; s|(main\.js\?v=)[^\"']+|\1$VERSION|g" index.html
+rm -f index.html.tmp
 
 tar "${EXCLUDES[@]}" -czf - "${PAYLOAD[@]}" \
     | ssh "$REMOTE_ALIAS" "tar -xzf - -C '$REMOTE_PATH' && \

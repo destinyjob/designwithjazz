@@ -11,13 +11,13 @@ RewriteRule ^(.*)$ https://www.designwithjazz.com/$1 [L,R=301]
 RewriteCond %{HTTPS} off
 RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
-# 3. Far-future cache for static assets, short cache for the HTML so
-#    content updates show up without users hard-refreshing.
+# 3. Far-future cache for static assets that change rarely or are
+#    cache-busted via ?v=token (deploy.sh stamps a fresh token from
+#    the git short SHA into index.html on every deploy).
 <IfModule mod_expires.c>
     ExpiresActive On
     ExpiresDefault "access plus 1 month"
 
-    # Long cache: assets that change rarely or get cache-busted via ?v=
     ExpiresByType image/webp                "access plus 1 year"
     ExpiresByType image/png                 "access plus 1 year"
     ExpiresByType image/jpeg                "access plus 1 year"
@@ -29,15 +29,29 @@ RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
     ExpiresByType application/font-woff     "access plus 1 year"
     ExpiresByType application/font-woff2    "access plus 1 year"
 
-    # Short cache: HTML so copy edits propagate fast
-    ExpiresByType text/html                 "access plus 5 minutes"
-
-    # Medium cache: CSS/JS (files use ?v= cache-busters in HTML)
-    ExpiresByType text/css                  "access plus 1 month"
-    ExpiresByType application/javascript    "access plus 1 month"
+    # CSS/JS get the same long cache because their URLs change on every
+    # deploy via ?v=<sha>. The OLD ?v= URL stays cached forever harmlessly;
+    # the new HTML always points at the new ?v= URL.
+    ExpiresByType text/css                  "access plus 1 year"
+    ExpiresByType application/javascript    "access plus 1 year"
 </IfModule>
 
-# 4. Gzip/deflate text-based responses on the wire.
+# 4. HTML must always re-validate so visitors get the latest ?v=tokens
+#    (which then trigger fresh CSS/JS loads). Browsers still get a cached
+#    copy when the server returns 304 Not Modified, so this is fast - it
+#    just guarantees you'll never see a stale page after a deploy.
+<IfModule mod_headers.c>
+    <FilesMatch "\.(html|htm)$">
+        Header set Cache-Control "no-cache, must-revalidate, max-age=0"
+    </FilesMatch>
+    # The site root (/) is also HTML but matches no extension; force the
+    # same policy via the directory index alias.
+    <FilesMatch "^index\.html$">
+        Header set Cache-Control "no-cache, must-revalidate, max-age=0"
+    </FilesMatch>
+</IfModule>
+
+# 5. Gzip/deflate text-based responses on the wire.
 <IfModule mod_deflate.c>
     AddOutputFilterByType DEFLATE text/html text/css text/xml text/plain
     AddOutputFilterByType DEFLATE application/javascript application/json
