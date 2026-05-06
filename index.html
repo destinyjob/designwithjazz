@@ -1015,5 +1015,179 @@
     </div>
 
     <script src="js/main.js?v=process2"></script>
+
+    <!-- =========================================================
+         STRUCTURED DATA (JSON-LD)
+         Helps Google understand what the site is about and unlocks
+         rich-result eligibility (FAQ accordion in SERP, star rating
+         on testimonials, knowledge panel for branded searches).
+         ========================================================= -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@graph": [
+            {
+                "@type": "Person",
+                "@id": "https://www.designwithjazz.com/#jasmine",
+                "name": "Jasmine Gathoga",
+                "alternateName": "The Canva Girl",
+                "url": "https://www.designwithjazz.com/",
+                "image": "https://www.designwithjazz.com/images/jasmine.webp",
+                "jobTitle": "LinkedIn Brand Strategist & Designer",
+                "description": "LinkedIn brand strategist, designer, and Canva Ambassador. Helps consultants and service providers get strategically and visually positioned on LinkedIn.",
+                "knowsAbout": [
+                    "LinkedIn brand strategy",
+                    "LinkedIn profile optimization",
+                    "LinkedIn banner design",
+                    "Canva design",
+                    "Personal branding",
+                    "Content strategy",
+                    "Carousel design"
+                ],
+                "sameAs": [
+                    "https://www.linkedin.com/in/jasminegathoga/"
+                ]
+            },
+            {
+                "@type": "ProfessionalService",
+                "@id": "https://www.designwithjazz.com/#service",
+                "name": "Jasmine Gathoga - LinkedIn Brand Strategy & Design",
+                "url": "https://www.designwithjazz.com/",
+                "image": "https://www.designwithjazz.com/images/jasmine.webp",
+                "description": "LinkedIn brand strategy and profile design that gets consultants and service providers paid, not just liked. 100+ profiles designed worldwide.",
+                "founder": { "@id": "https://www.designwithjazz.com/#jasmine" },
+                "priceRange": "$30-$500",
+                "areaServed": { "@type": "Place", "name": "Worldwide" },
+                "email": "hello@thatcanvagirl.com",
+                "sameAs": [
+                    "https://www.linkedin.com/in/jasminegathoga/"
+                ],
+                "hasOfferCatalog": {
+                    "@type": "OfferCatalog",
+                    "name": "Services",
+                    "itemListElement": [
+                        {
+                            "@type": "Offer",
+                            "itemOffered": {
+                                "@type": "Service",
+                                "name": "LinkedIn Brand Strategy",
+                                "description": "1-on-1 deep dive into positioning, messaging, and content strategy."
+                            }
+                        },
+                        {
+                            "@type": "Offer",
+                            "itemOffered": {
+                                "@type": "Service",
+                                "name": "Profile Optimization & Design",
+                                "description": "LinkedIn profiles, banners, carousels, and flyers built around your personality and positioning."
+                            }
+                        },
+                        {
+                            "@type": "Offer",
+                            "itemOffered": {
+                                "@type": "Service",
+                                "name": "Brand Collaborations",
+                                "description": "Sponsored posts, ambassadorships, partnership decks, and campaign assets for brands serving creators, founders, and professionals."
+                            }
+                        }
+                    ]
+                },
+                "aggregateRating": {
+                    "@type": "AggregateRating",
+                    "ratingValue": "5",
+                    "reviewCount": "14",
+                    "bestRating": "5",
+                    "worstRating": "5"
+                },
+                "review": [
+                    {
+                        "@type": "Review",
+                        "reviewRating": { "@type": "Rating", "ratingValue": "5", "bestRating": "5" },
+                        "author": { "@type": "Person", "name": "Blossom Affia" },
+                        "reviewBody": "I've worked with a lot of designers. Jasmine is just on another level. Most designers give you what you ask for. Jasmine gives you what you didn't even know you needed and somehow, it's always better."
+                    },
+                    {
+                        "@type": "Review",
+                        "reviewRating": { "@type": "Rating", "ratingValue": "5", "bestRating": "5" },
+                        "author": { "@type": "Person", "name": "Aderonke Filani" },
+                        "reviewBody": "Working with you has been such a refreshing experience. You didn't just 'revamp' my LinkedIn... you understood me. The way you translated my vision, my message, and the heart behind my work into a clean, elegant profile means a lot to me."
+                    },
+                    {
+                        "@type": "Review",
+                        "reviewRating": { "@type": "Rating", "ratingValue": "5", "bestRating": "5" },
+                        "author": { "@type": "Person", "name": "Lucia Giammarco Granier" },
+                        "reviewBody": "I really enjoyed working with Jasmine on my LinkedIn profile and YouTube channel. She helped me clarify my positioning, strengthen my message, and bring more coherence to my online presence."
+                    },
+                    {
+                        "@type": "Review",
+                        "reviewRating": { "@type": "Rating", "ratingValue": "5", "bestRating": "5" },
+                        "author": { "@type": "Person", "name": "Samuel Idu" },
+                        "reviewBody": "Jasmine is an absolute gem to work with. Her designs are so good you'll stare at them if she does two for you to pick one. She has taken creativity to another level and she pays attention to the smallest details."
+                    },
+                    {
+                        "@type": "Review",
+                        "reviewRating": { "@type": "Rating", "ratingValue": "5", "bestRating": "5" },
+                        "author": { "@type": "Person", "name": "Cheryl Patterson" },
+                        "reviewBody": "Working with Jasmine was so easy and efficient. From the start, she took the time to truly understand my vision, voice, style and colors. She didn't just update my social media, she elevated it."
+                    }
+                ]
+            },
+            {
+                "@type": "WebSite",
+                "@id": "https://www.designwithjazz.com/#website",
+                "url": "https://www.designwithjazz.com/",
+                "name": "Jasmine Gathoga | The Canva Girl",
+                "publisher": { "@id": "https://www.designwithjazz.com/#jasmine" },
+                "inLanguage": "en"
+            },
+            {
+                "@type": "FAQPage",
+                "@id": "https://www.designwithjazz.com/#faq",
+                "mainEntity": [
+                    {
+                        "@type": "Question",
+                        "name": "How long does this whole thing take?",
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": "Depends on what you get. A banner takes longer than a carousel or flyer, and bigger profile rebuilds run longer than single assets. Reach out and I'll give you a real timeline. Heads up: if I'm booked out, that adds to it."
+                        }
+                    },
+                    {
+                        "@type": "Question",
+                        "name": "Do I have to write my own copy?",
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": "Depends on what you're after. For carousels and template purchases, you usually send me the text. For LinkedIn profile rebuilds, I handle strategic positioning and hook copy for the visuals. If you'd rather I write more, we can chat about a content add-on."
+                        }
+                    },
+                    {
+                        "@type": "Question",
+                        "name": "Which Canva plan do I need?",
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": "Free Canva works for most layouts. But honestly? Canva Pro unlocks the good stuff: brand kits, premium elements, the whole vibe."
+                        }
+                    },
+                    {
+                        "@type": "Question",
+                        "name": "Can't I just do this myself?",
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": "Sure. You absolutely can. Just like I could rewire my own house. But why spend weeks figuring out what works when I've already spent thousands of hours testing and perfecting this for 100+ brands? Your time is worth more than that. And honestly? So is your reputation."
+                        }
+                    },
+                    {
+                        "@type": "Question",
+                        "name": "When is the next Canva coaching cohort?",
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": "Cohorts run three times a year, and the next one kicks off in June 2026. This isn't just social-media design. It's Canva mastery for building brands that look premium. DM me to get on the waitlist before spots fill up."
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+    </script>
 </body>
 </html>
