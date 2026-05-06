@@ -140,13 +140,30 @@ main.slab-container { overflow-x: clip; }
 
 .header-logo {
     font-family: var(--font-logo);
-    font-size: 1.85rem;
+    font-size: 1.4rem;
     color: var(--text-main);
     text-decoration: none;
     font-weight: 400;
     letter-spacing: 0.005em;
     text-transform: uppercase;
     line-height: 1;
+    transition: opacity 0.25s ease;
+}
+
+/* When the mobile drawer is open, the page behind it is dimmed by the
+   backdrop. The logo + CTA in the (transparent) fixed header would sit
+   on top of that dim layer and become hard to read. Fade them out and
+   leave only the burger/X on top so the drawer takes full attention. */
+body.mobile-nav-open .header-logo,
+body.mobile-nav-open .header-cta {
+    opacity: 0;
+    pointer-events: none;
+}
+body.mobile-nav-open .header-cta {
+    transition: opacity 0.25s ease;
+}
+body.mobile-nav-open .header-burger span {
+    background: #fff;
 }
 
 .header-right {
@@ -225,6 +242,7 @@ main.slab-container { overflow-x: clip; }
 .header-burger[aria-expanded="true"] span:nth-child(3) {
     transform: translateY(-7px) rotate(-45deg);
 }
+
 
 /* === Mobile side-drawer nav ============================================
    Slides in from the right with brand-purple background, big bold links
@@ -3825,7 +3843,7 @@ section#process.slab {
     .top-header.scrolled { padding: 0.7rem 0; }
     .header-inner { padding: 0 18px; }
     .header-nav { display: none; }
-    .header-logo { font-size: 1.4rem; letter-spacing: 0.005em; }
+    .header-logo { font-size: 1.05rem; letter-spacing: 0.005em; }
     .header-right { gap: 0; align-items: center; }
     .header-cta {
         padding: 11px 18px;
@@ -4434,7 +4452,7 @@ section#process.slab {
    Very small phones (≤380px) - extra tightening
    ============================================ */
 @media (max-width: 380px) {
-    .header-logo { font-size: 1.25rem; letter-spacing: 0.005em; }
+    .header-logo { font-size: 0.95rem; letter-spacing: 0.005em; }
     .header-cta {
         padding: 9px 14px;
         font-size: 0.78rem;
