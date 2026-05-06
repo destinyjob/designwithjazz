@@ -3171,7 +3171,7 @@ section#process.slab {
 .services-grid-v2 {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 1.5rem;
+    gap: 2rem;
     max-width: 1200px;
     margin: 0 auto;
     align-items: start;
@@ -3180,7 +3180,7 @@ section#process.slab {
 .service-card-v2 {
     background: white;
     border-radius: var(--border-radius-xl);
-    padding: 3rem 2rem 2.5rem;
+    padding: 3rem 2.25rem 2.5rem;
     border: 1px solid rgba(0,0,0,0.05);
     box-shadow: var(--shadow-md);
     position: relative;
@@ -3189,7 +3189,8 @@ section#process.slab {
     flex-direction: column;
     align-items: flex-start;
     text-align: left;
-    min-height: 480px;
+    min-height: 520px;
+    gap: 0.5rem;
     transition: var(--transition-base);
 }
 
@@ -3206,26 +3207,6 @@ section#process.slab {
 .service-card-v2:nth-child(2):hover {
     transform: translateY(-24px);
 }
-
-/* Background accent shape */
-.service-accent-shape {
-    position: absolute;
-    top: -40px;
-    right: -40px;
-    width: 160px;
-    height: 160px;
-    border-radius: 50%;
-    z-index: 0;
-    transition: transform 0.6s ease;
-}
-
-.service-card-v2:hover .service-accent-shape {
-    transform: scale(1.2);
-}
-
-.service-card--coral .service-accent-shape { background: rgba(251, 113, 133, 0.08); }
-.service-card--purple .service-accent-shape { background: rgba(139, 92, 246, 0.08); }
-.service-card--gold .service-accent-shape { background: rgba(251, 191, 36, 0.08); }
 
 /* Card number */
 .service-card-num {
@@ -3256,9 +3237,9 @@ section#process.slab {
 .service-description-v2 {
     font-family: var(--font-body);
     font-size: 1rem;
-    line-height: 1.6;
+    line-height: 1.65;
     color: var(--text-muted);
-    margin-bottom: 1.5rem;
+    margin-bottom: 1.75rem;
     position: relative;
     z-index: 1;
 }
@@ -3267,10 +3248,10 @@ section#process.slab {
 .service-bullets {
     list-style: none;
     padding: 0;
-    margin: 0 0 2rem;
+    margin: 0 0 2.25rem;
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 0.65rem;
     position: relative;
     z-index: 1;
 }
