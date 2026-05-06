@@ -646,6 +646,37 @@ h2 {
     padding: 0 0.5rem 0.5rem;
 }
 
+/* Founder LinkedIn pill - sits as a sibling below the profile card so
+   it works on both the desktop side-stack and the mobile overlay layout */
+.profile-linkedin {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 1.1rem;
+    padding: 9px 16px;
+    background: var(--text-main);
+    color: #fff;
+    border-radius: 100px;
+    text-decoration: none;
+    font-family: var(--font-labels);
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    transition: background 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+}
+.profile-linkedin:hover {
+    background: #0A66C2;
+    transform: translateY(-1px);
+    box-shadow: 0 8px 18px rgba(10, 102, 194, 0.35);
+}
+.profile-linkedin svg {
+    flex-shrink: 0;
+}
+.profile-linkedin-arrow {
+    opacity: 0.7;
+    font-weight: 500;
+}
+
 .status-badge {
     display: inline-flex;
     align-items: center;

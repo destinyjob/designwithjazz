@@ -1,0 +1,7 @@
+# robots.txt for designwithjazz.com
+# Allow every well-behaved crawler. Sitemap location below.
+
+User-agent: *
+Allow: /
+
+Sitemap: https://www.designwithjazz.com/sitemap.xml
