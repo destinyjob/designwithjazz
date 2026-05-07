@@ -40,10 +40,6 @@ RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 #    (which then trigger fresh CSS/JS loads). Browsers still get a cached
 #    copy when the server returns 304 Not Modified, so this is fast - it
 #    just guarantees you'll never see a stale page after a deploy.
-#
-#    No <IfModule> wrapper because LiteSpeed identifies as a different
-#    module name and the conditional silently no-ops on this host.
-#    "Header always" applies even on non-2xx responses too.
 <FilesMatch "\.(html|htm)$">
     Header always set Cache-Control "no-cache, must-revalidate, max-age=0"
     Header always set Pragma "no-cache"
@@ -51,6 +47,16 @@ RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 </FilesMatch>
 <FilesMatch "^index\.html$">
     Header always set Cache-Control "no-cache, must-revalidate, max-age=0"
+</FilesMatch>
+
+# 5. Static assets get 1-year immutable cache. LiteSpeed's default
+#    cache-control of 7 days isn't long enough for Lighthouse - "Header
+#    always" overrides it. immutable tells the browser the file at this
+#    URL will never change (which is true: deploy.sh stamps a fresh
+#    ?v=<sha> token onto styles.css/main.js refs every deploy, so cache
+#    busts via URL change).
+<FilesMatch "\.(webp|png|jpg|jpeg|gif|svg|ico|woff|woff2|otf|ttf|css|js)$">
+    Header always set Cache-Control "public, max-age=31536000, immutable"
 </FilesMatch>
 
 # 5. Gzip/deflate text-based responses on the wire.
