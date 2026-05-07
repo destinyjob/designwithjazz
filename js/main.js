@@ -123,6 +123,47 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
 
+        // === Calendly inline popup ===========================================
+        // When the user clicks "Book your audit call" in the success state,
+        // open Calendly as an overlay on top of the page rather than a new
+        // tab, with the form data prefilled. The widget JS is lazy-loaded
+        // on first click so it doesn't bloat the initial page load. The
+        // <a> still has a real href as a fallback if the script fails to
+        // load (in which case we open it in a new tab).
+        let calendlyLoading = null;
+        const ensureCalendlyLoaded = () => {
+            if (window.Calendly) return Promise.resolve();
+            if (calendlyLoading) return calendlyLoading;
+            calendlyLoading = new Promise((resolve, reject) => {
+                if (!document.querySelector('link[href*="calendly.com/assets/external/widget.css"]')) {
+                    const link = document.createElement('link');
+                    link.rel = 'stylesheet';
+                    link.href = 'https://assets.calendly.com/assets/external/widget.css';
+                    document.head.appendChild(link);
+                }
+                const script = document.createElement('script');
+                script.src = 'https://assets.calendly.com/assets/external/widget.js';
+                script.async = true;
+                script.onload = () => resolve();
+                script.onerror = () => reject(new Error('Calendly widget failed to load'));
+                document.head.appendChild(script);
+            });
+            return calendlyLoading;
+        };
+
+        if (successCalendly) {
+            successCalendly.addEventListener('click', async (e) => {
+                e.preventDefault();
+                try {
+                    await ensureCalendlyLoaded();
+                    window.Calendly.initPopupWidget({ url: successCalendly.href });
+                } catch (err) {
+                    console.error('Calendly popup failed, falling back to new tab:', err);
+                    window.open(successCalendly.href, '_blank', 'noopener,noreferrer');
+                }
+            });
+        }
+
         // Intercept all #contact anchor clicks AND data-open-modal triggers
         document.addEventListener('click', (e) => {
             const trigger = e.target.closest('[data-open-modal="contact"], a[href="#contact"]');
