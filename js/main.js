@@ -118,7 +118,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     submitBtn.disabled = false;
                     submitBtn.textContent = 'Try again';
                     console.error('Contact form submission failed:', err);
-                    alert("Couldn't send that - please try again, or email hello@thatcanvagirl.com directly.");
+                    alert("Couldn't send that - please try again, or email hello@designwithjazz.com directly.");
                 }
             });
         }
