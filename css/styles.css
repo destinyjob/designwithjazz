@@ -1,4 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Caveat:wght@400..700&family=Inter+Tight:ital,wght@0,100..900;1,100..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Italiana&family=Cormorant+Garamond:wght@300;400;500;600;700&display=swap');
+/* Google Fonts moved to a <link> in index.html so the request runs in
+   parallel with CSS parsing instead of blocking it via @import chain. */
 
 /* Brown Carolina Duo - the logo font (paid foundry, served locally).
    font-display: swap so the page renders immediately with a fallback,
@@ -44,10 +45,10 @@ body::-webkit-scrollbar {
     --font-heading: 'Bricolage Grotesque', sans-serif;
     --font-labels: 'Inter Tight', sans-serif;
     --font-body: 'Inter', sans-serif;
-    /* Brown Carolina Sans is the intended logo font (paid foundry).
-       Falls back to Italiana / Cormorant Garamond which share the
-       elegant tall display proportions if the font isn't installed. */
-    --font-logo: 'Brown Carolina Sans', 'Italiana', 'Cormorant Garamond', serif;
+    /* Brown Carolina Sans is self-hosted in /fonts/. Georgia is the
+       cleanest tall-serif system fallback for the brief moment before
+       the local font swaps in. */
+    --font-logo: 'Brown Carolina Sans', Georgia, 'Times New Roman', serif;
     
     --border-radius-xl: 32px;
     --border-radius-lg: 24px;

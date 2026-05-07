@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
             savedScrollY = window.scrollY;
             document.body.style.top = `-${savedScrollY}px`;
             contactModal.classList.add('is-open');
-            contactModal.setAttribute('aria-hidden', 'false');
+            contactModal.removeAttribute('inert');
             document.body.classList.add('modal-open');
             // Notify the page (testimonial auto-rotate listens for this)
             document.dispatchEvent(new CustomEvent('modal:open'));
@@ -56,7 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const closeContactModal = () => {
             contactModal.classList.remove('is-open');
-            contactModal.setAttribute('aria-hidden', 'true');
+            contactModal.setAttribute('inert', '');
             document.body.classList.remove('modal-open');
             // Restore scroll position INSTANTLY - html has scroll-behavior:
             // smooth which would otherwise animate the restore as a visible
@@ -252,7 +252,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const closeNav = () => {
             burger.setAttribute('aria-expanded', 'false');
             mobileNav.classList.remove('is-open');
-            mobileNav.setAttribute('aria-hidden', 'true');
+            // inert removes the drawer's links from the focus tree when
+            // closed - cleaner than aria-hidden + tabindex juggling and
+            // satisfies the "aria-hidden has focusable descendants" audit.
+            mobileNav.setAttribute('inert', '');
             navBack.classList.remove('is-open');
             navBack.setAttribute('aria-hidden', 'true');
             document.body.classList.remove('mobile-nav-open');
@@ -271,7 +274,7 @@ document.addEventListener('DOMContentLoaded', () => {
             document.body.classList.add('mobile-nav-open');
             burger.setAttribute('aria-expanded', 'true');
             mobileNav.classList.add('is-open');
-            mobileNav.setAttribute('aria-hidden', 'false');
+            mobileNav.removeAttribute('inert');
             navBack.classList.add('is-open');
             navBack.setAttribute('aria-hidden', 'false');
         };
@@ -777,13 +780,13 @@ document.addEventListener('DOMContentLoaded', () => {
             lbImg.src = slides[idx].dataset.src;
             lbImg.alt = slides[idx].querySelector('img').alt;
             lb.classList.add('is-open');
-            lb.setAttribute('aria-hidden', 'false');
+            lb.removeAttribute('inert');
             document.body.style.overflow = 'hidden';
             stopAuto();
         };
         const closeLb = () => {
             lb.classList.remove('is-open');
-            lb.setAttribute('aria-hidden', 'true');
+            lb.setAttribute('inert', '');
             document.body.style.overflow = '';
             startAuto();
         };
