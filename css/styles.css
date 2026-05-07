@@ -3040,6 +3040,7 @@ section#process.slab {
     top: -85px;
     left: -30px;
     width: 220px;
+    height: auto;
     pointer-events: none;
     filter: drop-shadow(0 10px 18px rgba(0, 0, 0, 0.18));
     /* z-index -1 puts the hand behind card 1's body so only the sleeve and
@@ -3345,6 +3346,11 @@ section#process.slab {
     z-index: 10;
     filter: drop-shadow(0 10px 22px rgba(0, 0, 0, 0.25));
     transform-origin: center center;
+    /* The HTML width/height attributes (added for CLS) carry the natural
+       pixel size, so without an explicit height:auto the CSS width:Npx
+       only changes width while height stays at the intrinsic value -
+       result: stretched hands. Force aspect-ratio scaling. */
+    height: auto;
 }
 
 /* Hero stat card - pointing-down hand with cuff drops in from the top of the card */
