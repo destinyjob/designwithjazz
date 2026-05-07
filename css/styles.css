@@ -3360,7 +3360,13 @@ section#process.slab {
    card. top tuned so the fingertip lands just above the card's top edge
    (~130px from section top after header simplification). */
 .hand-services {
-    top: 130px;
+    /* Hidden on desktop: the section's 128px top padding gets eaten by
+       the fixed page header (~80px), and the gap between the heading
+       bottom and the cards' top is too tight for a 126px-tall hand
+       without overlapping the "How we work together" pill or the cards.
+       Mobile keeps a small top-right placement via the override below. */
+    display: none;
+    top: 5px;
     left: calc(50% + 70px);
     width: 110px;
     animation: handServicesBob 4.5s ease-in-out infinite;
@@ -3424,8 +3430,10 @@ section#process.slab {
         top: 4px;
         right: 4px;
     }
-    /* Services hand - smaller, tucked in top-right of section */
+    /* Services hand - re-shown on mobile (hidden on desktop above due to
+       layout collision), small + tucked in top-right of section. */
     .hand-services {
+        display: block;
         width: 70px;
         top: 20px;
         left: auto;
