@@ -93,11 +93,15 @@ rm -f index.html.tmp
 node -e "
 const fs = require('fs');
 // CSS: drop comments, collapse whitespace, tighten around { } : ; ,
+// IMPORTANT: don't touch + or - because the CSS spec REQUIRES whitespace
+// around them inside calc() expressions. Stripping breaks calc(50% + 70px)
+// -> calc(50%+70px) which the parser treats as invalid and drops the
+// whole declaration. > and ~ are sibling combinators with no such gotcha.
 let css = fs.readFileSync('css/styles.css', 'utf8');
 css = css
   .replace(/\\/\\*[\\s\\S]*?\\*\\//g, '')
   .replace(/\\s+/g, ' ')
-  .replace(/\\s*([{}:;,>+~])\\s*/g, '\\\$1')
+  .replace(/\\s*([{}:;,>~])\\s*/g, '\\\$1')
   .replace(/;}/g, '}')
   .trim();
 fs.writeFileSync('css/styles.css', css);
