@@ -79,7 +79,9 @@ body::-webkit-scrollbar {
     --emphasis-purple: #F59E0B;  /* amber gold */
     --accent-pink: #EC4899;
     --text-main: #1A0A2E;        /* very dark purple-black */
-    --text-muted: rgba(26, 10, 46, 0.6);
+    /* Bumped from 0.6 -> 0.72 alpha to clear WCAG AA (4.5:1) on the
+       cream --bg-primary. Stays muted visually, passes a11y audits. */
+    --text-muted: rgba(26, 10, 46, 0.72);
 
     /* Extra Ref Accents */
     --accent-coral: #FB7185;
