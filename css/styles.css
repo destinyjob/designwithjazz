@@ -1,19 +1,14 @@
 /* Google Fonts moved to a <link> in index.html so the request runs in
    parallel with CSS parsing instead of blocking it via @import chain. */
 
-/* Brown Carolina Duo - the logo font (paid foundry, served locally).
-   font-display: swap so the page renders immediately with a fallback,
-   then upgrades to Brown Carolina once the .otf finishes loading. */
+/* Brown Carolina Sans - the logo font, served locally. WOFF2 first
+   (modern, ~57% smaller than OTF) with OTF as fallback for older clients.
+   font-display: swap so the page paints immediately with the system serif
+   fallback, then upgrades when the local font lands. */
 @font-face {
     font-family: 'Brown Carolina Sans';
-    src: url('../fonts/brown-carolina-sans.otf') format('opentype');
-    font-weight: 400;
-    font-style: normal;
-    font-display: swap;
-}
-@font-face {
-    font-family: 'Brown Carolina Script';
-    src: url('../fonts/brown-carolina-script.otf') format('opentype');
+    src: url('../fonts/brown-carolina-sans.woff2') format('woff2'),
+         url('../fonts/brown-carolina-sans.otf') format('opentype');
     font-weight: 400;
     font-style: normal;
     font-display: swap;
