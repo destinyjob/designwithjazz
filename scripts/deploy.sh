@@ -44,7 +44,9 @@ EXCLUDES=(
     --exclude='Selected visual'
 )
 
-PAYLOAD=(.htaccess robots.txt sitemap.xml index.html css js images fonts)
+PAYLOAD=(.htaccess robots.txt sitemap.xml index.html
+         favicon.svg favicon.ico favicon-32.png favicon-192.png apple-touch-icon.png
+         css js images fonts)
 
 # Cache-bust token. Prefer the current git short SHA so every commit
 # gets a unique token; fall back to a unix timestamp if git isn't
