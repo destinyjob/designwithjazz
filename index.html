@@ -42,12 +42,16 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preload" as="image" href="images/jasmine.webp" fetchpriority="high">
 
-    <!-- Google Fonts loaded as a <link> in HTML (not via @import inside
-         CSS) so the font request runs in parallel with CSS parsing rather
-         than waiting on a chained request. Slimmed to only what's used:
-         Bricolage Grotesque (headings), Inter (body), Inter Tight (labels).
-         Logo font (Brown Carolina Sans) is self-hosted in /fonts/. -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Inter+Tight:ital,wght@0,100..900;1,100..900&display=swap">
+    <!-- Google Fonts loaded non-blockingly: the preload primes the cache,
+         the print-media stylesheet downloads without blocking render, and
+         the onload swap promotes it to all media so the fonts apply once
+         downloaded. Combined with font-display:swap (in the URL), the page
+         paints with system fallbacks first then upgrades. Slimmed to only
+         what's used: Bricolage Grotesque (headings), Inter (body), Inter
+         Tight (labels). Logo font (Brown Carolina Sans) is self-hosted. -->
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Inter+Tight:ital,wght@0,100..900;1,100..900&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Inter+Tight:ital,wght@0,100..900;1,100..900&display=swap" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Inter+Tight:ital,wght@0,100..900;1,100..900&display=swap"></noscript>
 
     <link rel="stylesheet" href="css/styles.css?v=20260506-2">
 </head>
@@ -130,7 +134,7 @@
 
                         <!-- Tall card top-left -->
                         <div class="bento-cell bento-tall">
-                            <img src="images/jasmine.webp" alt="Jasmine Gathoga, LinkedIn brand strategist" class="bento-img" width="720" height="960" fetchpriority="high">
+                            <img src="images/jasmine.webp" alt="Jasmine Gathoga, LinkedIn brand strategist" class="bento-img" width="600" height="800" fetchpriority="high">
                             <div class="bento-badge">
                                 The Canva Girl
                             </div>
@@ -427,7 +431,7 @@
                 <aside class="reveal-child">
                     <div class="profile-card">
                         <div class="profile-img-inner">
-                            <img src="images/jasmine.webp" alt="Jasmine Gathoga, LinkedIn brand strategist and Canva ambassador" width="720" height="960">
+                            <img src="images/jasmine.webp" alt="Jasmine Gathoga, LinkedIn brand strategist and Canva ambassador" width="600" height="800">
                         </div>
                         <div class="profile-meta">
                             <p class="profile-name" style="font-size: 1.25rem; font-weight: 700; margin: 0 0 0.25rem;">Jasmine Gathoga</p>
