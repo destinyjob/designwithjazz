@@ -3356,9 +3356,11 @@ section#process.slab {
     animation: handStatBob 4.5s ease-in-out infinite;
 }
 
-/* Services section - pointing-down hand highlights the elevated middle card */
+/* Services section - pointing-down hand highlights the elevated middle
+   card. top tuned so the fingertip lands just above the card's top edge
+   (~130px from section top after header simplification). */
 .hand-services {
-    top: 40px;
+    top: 130px;
     left: calc(50% + 70px);
     width: 110px;
     animation: handServicesBob 4.5s ease-in-out infinite;
