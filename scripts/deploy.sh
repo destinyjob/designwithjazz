@@ -92,18 +92,29 @@ rm -f index.html.tmp
 # on top of gzip - small but measurable on slow 4G.
 node -e "
 const fs = require('fs');
-// CSS: drop comments, collapse whitespace, tighten around { } : ; ,
-// IMPORTANT: don't touch + or - because the CSS spec REQUIRES whitespace
-// around them inside calc() expressions. Stripping breaks calc(50% + 70px)
-// -> calc(50%+70px) which the parser treats as invalid and drops the
-// whole declaration. > and ~ are sibling combinators with no such gotcha.
+// CSS minify: drop comments, collapse whitespace, tighten around
+// { } : ; , > ~ . Caveats:
+// - Don't touch + or -: CSS spec REQUIRES whitespace around them
+//   inside calc() expressions. calc(50% + 70px) must NOT become
+//   calc(50%+70px) (invalid; declaration silently dropped).
+// - Whitespace inside quoted strings is significant (attribute
+//   selectors like [style*=\"text-align: center\"], content:\"foo : bar\",
+//   url(\"...\")). We mask strings before stripping whitespace, then
+//   restore them. Hand-rolled minifiers without this step quietly
+//   break selectors.
 let css = fs.readFileSync('css/styles.css', 'utf8');
+const __strs = [];
+css = css.replace(/(\"[^\"]*\"|'[^']*')/g, (m) => {
+  __strs.push(m);
+  return '__CSSSTR' + (__strs.length - 1) + '__';
+});
 css = css
   .replace(/\\/\\*[\\s\\S]*?\\*\\//g, '')
   .replace(/\\s+/g, ' ')
   .replace(/\\s*([{}:;,>~])\\s*/g, '\\\$1')
   .replace(/;}/g, '}')
   .trim();
+css = css.replace(/__CSSSTR(\\d+)__/g, (_, i) => __strs[+i]);
 fs.writeFileSync('css/styles.css', css);
 // JS: drop // line comments and /* block */ comments, collapse whitespace
 // (kept conservative - only safe transforms, no identifier renaming)
