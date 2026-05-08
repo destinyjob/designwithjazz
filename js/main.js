@@ -219,8 +219,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Collapse
                 hiddenBanners.forEach(b => b.classList.add('banner-item-hidden'));
                 showMoreBtn.innerHTML = 'Show me more ↓';
-                // Smooth scroll back to section start
-                bannerSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                // Keep the show-more button in view after collapse so the
+                // user doesn't get yanked to the section top (was using
+                // scrollIntoView on bannerSection - too jarring on mobile,
+                // especially since the user's typically already near the
+                // button when they click Show Less).
+                showMoreBtn.scrollIntoView({ behavior: 'smooth', block: 'center' });
             } else {
                 // Expand
                 hiddenBanners.forEach(b => {
