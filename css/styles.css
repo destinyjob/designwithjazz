@@ -93,7 +93,11 @@ body::-webkit-scrollbar {
 }
 
 body {
-    background-color: var(--bg-dark);
+    /* Use the page's primary cream bg so any sub-pixel render/leak on
+       mobile (address-bar transitions, overscroll bounce, scrollbar
+       gutter) blends with the page rather than showing as a dark
+       stripe. Dark slabs still set their own background explicitly. */
+    background-color: var(--bg-primary);
     color: var(--text-main);
     font-family: var(--font-body);
     line-height: 1.5;
@@ -193,7 +197,7 @@ body.mobile-nav-open .header-burger span {
     color: white;
     text-decoration: none;
     padding: 12px 24px;
-    border-radius: 12px;
+    border-radius: var(--border-radius-md);
     font-family: var(--font-labels);
     font-weight: 600;
     font-size: 0.95rem;
@@ -710,6 +714,7 @@ h2 {
     line-height: 1.7;
 }
 
+
 /* ============================================================
    TESTIMONIALS - REVIEWS SPLIT LAYOUT
    ============================================================ */
@@ -760,18 +765,19 @@ h2 {
     position: relative;
 }
 
-/* CTA pill - purple to stay consistent with the global "Book My Free Audit" CTA */
+/* CTA - matches hero btn--primary btn--xl (purple, 16px radius, same
+   padding) for site-wide button consistency. */
 .testi-cta-btn {
     display: inline-flex;
     align-items: center;
     margin-top: 1.75rem;
     background: var(--primary-purple);
     color: #fff;
-    font-family: var(--font-heading);
-    font-weight: 700;
-    font-size: 0.95rem;
-    padding: 12px 26px;
-    border-radius: 100px;
+    font-family: var(--font-labels);
+    font-weight: 600;
+    font-size: 1.05rem;
+    padding: 16px 32px;
+    border-radius: var(--border-radius-md);
     text-decoration: none;
     transition: background 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
 }
@@ -1796,11 +1802,11 @@ h2 {
     gap: 8px;
     background: var(--primary-purple);
     color: #fff;
-    font-family: var(--font-heading);
-    font-weight: 700;
+    font-family: var(--font-labels);
+    font-weight: 600;
     font-size: 1.05rem;
-    padding: 18px 40px;
-    border-radius: 100px;
+    padding: 16px 32px;
+    border-radius: var(--border-radius-md);
     text-decoration: none;
     transition: var(--transition-spring);
     border: none;
@@ -4075,7 +4081,9 @@ section#process.slab {
     .slab--hero { padding: 0 !important; }
     /* Banner section's "show more" + final CTA buttons - tighter */
     #see-more-banners-container { margin-top: 2rem !important; }
-    section#banners > div[style*="text-align: center"]:last-of-type { margin-top: 2.5rem !important; }
+    /* Audit my banner button: match the 2rem gap above Show me more so
+       the spacing reads as uniform (was 2.5rem -> looked offset). */
+    section#banners > div[style*="text-align: center"]:last-of-type { margin-top: 2rem !important; }
     section#services > div[style*="text-align: center"]:last-of-type { margin-top: 2.5rem !important; }
 
     /* ---------- LinkedIn Banner Showcase ---------- */
@@ -4414,10 +4422,19 @@ section#process.slab {
 
     /* ---------- Footer CTA: full-width button, stacked nav ---------- */
     .footer-cta-inner { gap: 3rem; }
-    .footer-cta-sub {
-        font-size: 0.98rem;
-        margin-bottom: 1.75rem;
-        line-height: 1.6;
+    /* Heading -> sub gap. testi-main-heading mobile rule sets margin-bottom
+       to 0.55rem which is too tight here - this section needs more
+       breathing room than other section headers. */
+    section#contact .testi-main-heading {
+        margin-bottom: 1.25rem !important;
+    }
+    /* Sub -> button gap. The .testi-subtitle mobile override sets
+       margin-bottom:0 !important which overrides .footer-cta-sub's
+       1.75rem. Win the specificity battle. */
+    .footer-cta-block .footer-cta-sub {
+        font-size: 0.98rem !important;
+        margin-bottom: 2rem !important;
+        line-height: 1.6 !important;
     }
     .footer-cta-btn {
         padding: 16px 28px;
