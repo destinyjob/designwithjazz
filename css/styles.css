@@ -2278,7 +2278,11 @@ body.modal-open {
 /* The marquee section CSS is already defined above in the slab layout section.
    This duplicate block below previously fought the new design - cleaned up. */
 .marquee-section {
-    /* Values set in card-stacking section above, just adding inner padding here */
+    /* Dark strip between hero and the banner showcase. Used to inherit
+       this from body's dark bg, but body is cream now (so it doesn't
+       leak as a stripe on mobile) - explicit bg keeps the marquee
+       looking the way it always did. */
+    background: var(--bg-dark);
     padding: 4rem 0;
 }
 
