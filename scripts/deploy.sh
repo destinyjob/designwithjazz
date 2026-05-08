@@ -100,16 +100,20 @@ const fs = require('fs');
 // - Whitespace inside quoted strings is significant (attribute
 //   selectors like [style*=\"text-align: center\"], content:\"foo : bar\",
 //   url(\"...\")). We mask strings before stripping whitespace, then
-//   restore them. Hand-rolled minifiers without this step quietly
-//   break selectors.
+//   restore them.
+// - ORDER MATTERS: strip comments BEFORE masking strings. Comments
+//   often contain apostrophes (don't / it's / body's), so a naive
+//   string regex sees those as the start of a 'string' and eats
+//   everything up to the next ' or \" elsewhere in the file - which
+//   silently corrupts huge chunks of CSS.
 let css = fs.readFileSync('css/styles.css', 'utf8');
+css = css.replace(/\\/\\*[\\s\\S]*?\\*\\//g, '');
 const __strs = [];
 css = css.replace(/(\"[^\"]*\"|'[^']*')/g, (m) => {
   __strs.push(m);
   return '__CSSSTR' + (__strs.length - 1) + '__';
 });
 css = css
-  .replace(/\\/\\*[\\s\\S]*?\\*\\//g, '')
   .replace(/\\s+/g, ' ')
   .replace(/\\s*([{}:;,>~])\\s*/g, '\\\$1')
   .replace(/;}/g, '}')
