@@ -2284,10 +2284,18 @@ body.modal-open {
 /* The marquee section CSS is already defined above in the slab layout section.
    This duplicate block below previously fought the new design - cleaned up. */
 .marquee-section {
-    /* Dark strip between hero and the banner showcase. Body is cream
-       so marquee carries its own bg explicitly. */
+    /* Dark band between hero and banners. Body used to be dark so the
+       marquee inherited its background; now body is cream (mobile fix)
+       so the marquee carries the dark bg explicitly. Otherwise the
+       structure is the original: no border-radius, no margin
+       manipulation, the next .slab cards-up over it like every other
+       section transition on the page.
+       padding-bottom = padding-top + 40px so text stays vertically
+       centered inside the *visible* dark area (the next .slab overlaps
+       the bottom 40px). Kept tight so the marquee + the banners curve
+       below are visible together in a single glance. */
     background: var(--bg-dark);
-    padding: 2rem 0;
+    padding: 1.5rem 0 calc(1.5rem + 40px);
 }
 
 .marquee-container {
