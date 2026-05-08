@@ -4098,9 +4098,12 @@ section#process.slab {
     /* Banner section's "show more" + final CTA buttons - tighter */
     #see-more-banners-container { margin-top: 2rem !important; }
     /* Audit my banner button: tight gap below "Show me more" so the
-       two CTAs read as a paired action. */
-    section#banners > div[style*="text-align: center"]:last-of-type { margin-top: 1rem !important; }
-    section#services > div[style*="text-align: center"]:last-of-type { margin-top: 2.5rem !important; }
+       two CTAs read as a paired action. The audit-button div is the
+       last div child of #banners. (Avoiding [style*=...] selectors
+       because our deploy minifier strips whitespace inside quoted
+       attribute values, breaking the substring match.) */
+    section#banners > div:last-of-type { margin-top: 1rem !important; }
+    section#services > div:last-of-type { margin-top: 2.5rem !important; }
 
     /* ---------- LinkedIn Banner Showcase ---------- */
     .banner-grid {
