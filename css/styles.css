@@ -4097,9 +4097,9 @@ section#process.slab {
     .slab--hero { padding: 0 !important; }
     /* Banner section's "show more" + final CTA buttons - tighter */
     #see-more-banners-container { margin-top: 2rem !important; }
-    /* Audit my banner button: match the 2rem gap above Show me more so
-       the spacing reads as uniform (was 2.5rem -> looked offset). */
-    section#banners > div[style*="text-align: center"]:last-of-type { margin-top: 2rem !important; }
+    /* Audit my banner button: tight gap below "Show me more" so the
+       two CTAs read as a paired action. */
+    section#banners > div[style*="text-align: center"]:last-of-type { margin-top: 1rem !important; }
     section#services > div[style*="text-align: center"]:last-of-type { margin-top: 2.5rem !important; }
 
     /* ---------- LinkedIn Banner Showcase ---------- */
