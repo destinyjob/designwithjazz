@@ -286,13 +286,24 @@ body.mobile-nav-open .header-burger span {
             radial-gradient(circle at top right, rgba(255, 122, 89, 0.28), transparent 55%),
             linear-gradient(180deg, #2A1340 0%, var(--bg-dark) 60%);
         color: #fff;
-        transform: translateX(102%);
-        transition: transform 0.42s cubic-bezier(0.22, 1, 0.36, 1);
+        /* translateX(110%) pushes drawer fully off-screen (was 102% -
+           sub-pixel rendering on some mobile browsers leaked a sliver
+           of dark on the right edge). visibility:hidden locks it out
+           of the paint tree entirely until is-open removes both. */
+        transform: translateX(110%);
+        visibility: hidden;
+        transition: transform 0.42s cubic-bezier(0.22, 1, 0.36, 1),
+                    visibility 0s linear 0.42s;
         box-shadow: -16px 0 60px rgba(0, 0, 0, 0.5);
         overflow-y: auto;
         overscroll-behavior: contain;
     }
-    .mobile-nav.is-open { transform: translateX(0); }
+    .mobile-nav.is-open {
+        transform: translateX(0);
+        visibility: visible;
+        transition: transform 0.42s cubic-bezier(0.22, 1, 0.36, 1),
+                    visibility 0s linear 0s;
+    }
 
     .mobile-nav-inner {
         padding: 6.5rem 2rem 2.5rem;
