@@ -583,10 +583,12 @@ h2 {
     color: white;
 }
 
+/* Same hover behavior as the .header-cta "Free Audit" pill so every
+   audit-leading button feels identical across the page. */
 .btn--primary:hover {
-    background: var(--text-main);
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-md);
+    background: var(--secondary-purple);
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 10px 20px rgba(var(--primary-purple-rgb), 0.15);
 }
 
 .btn--secondary {
@@ -600,8 +602,12 @@ h2 {
     color: white;
 }
 
+/* Secondary buttons echo the audit-button motion (lift + scale) so the
+   site has one consistent button "feel", just kept on a black palette. */
 .btn--dark:hover {
     background: #252525;
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.18);
 }
 
 .btn--minimal {
@@ -783,8 +789,8 @@ h2 {
 }
 .testi-cta-btn:hover {
     background: var(--secondary-purple);
-    transform: translateY(-2px);
-    box-shadow: 0 12px 24px rgba(139, 92, 246, 0.35);
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 10px 20px rgba(var(--primary-purple-rgb), 0.15);
 }
 
 /* === Reviews wrap === */
@@ -1816,8 +1822,8 @@ h2 {
 .footer-cta-btn:hover {
     background: var(--secondary-purple);
     color: #fff;
-    transform: translateY(-2px);
-    box-shadow: 0 16px 36px rgba(139, 92, 246, 0.5);
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 10px 20px rgba(var(--primary-purple-rgb), 0.15);
 }
 
 /* === Contact form ====================================================
@@ -2278,12 +2284,10 @@ body.modal-open {
 /* The marquee section CSS is already defined above in the slab layout section.
    This duplicate block below previously fought the new design - cleaned up. */
 .marquee-section {
-    /* Dark strip between hero and the banner showcase. Used to inherit
-       this from body's dark bg, but body is cream now (so it doesn't
-       leak as a stripe on mobile) - explicit bg keeps the marquee
-       looking the way it always did. */
+    /* Dark strip between hero and the banner showcase. Body is cream
+       so marquee carries its own bg explicitly. */
     background: var(--bg-dark);
-    padding: 4rem 0;
+    padding: 2rem 0;
 }
 
 .marquee-container {
@@ -2295,19 +2299,19 @@ body.modal-open {
 .marquee-content {
     display: flex;
     align-items: center;
-    gap: 4rem;
+    gap: 2.5rem;
     animation: scroll-marquee 35s linear infinite;
-    padding-right: 4rem; /* Buffer for seamlessness */
+    padding-right: 2.5rem; /* Buffer for seamlessness */
 }
 
 .marquee-item {
     color: #ffffff;
     font-family: var(--font-heading);
-    font-size: clamp(1.5rem, 4vw, 2.5rem);
-    font-weight: 800;
+    font-size: clamp(1rem, 1.5vw, 1.35rem);
+    font-weight: 700;
     display: flex;
     align-items: center;
-    gap: 2rem;
+    gap: 1.5rem;
     text-transform: uppercase;
     letter-spacing: 0.05em;
 }
