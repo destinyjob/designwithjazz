@@ -683,30 +683,6 @@ h2 {
     padding: 0 0.5rem 0.5rem;
 }
 
-/* Founder LinkedIn link - quiet text-link style. Sits below the
-   profile-card. The padding-left matches the card's content padding
-   (1rem card pad + 0.5rem meta pad) so the icon aligns with the
-   "Jasmine Gathoga" heading above it on desktop. */
-.profile-linkedin {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.45rem;
-    margin-top: 0.85rem;
-    padding-left: 1.5rem;
-    color: var(--text-muted);
-    text-decoration: none;
-    font-family: var(--font-labels);
-    font-size: 0.78rem;
-    font-weight: 500;
-    letter-spacing: 0.01em;
-    transition: color 0.2s ease;
-}
-.profile-linkedin:hover { color: #0A66C2; }
-.profile-linkedin svg {
-    flex-shrink: 0;
-    color: #0A66C2;
-}
-
 .status-badge {
     display: inline-flex;
     align-items: center;
@@ -2464,14 +2440,17 @@ body.modal-open {
 }
 
 .btn--ghost {
-    background: var(--bg-primary);
-    color: var(--primary-purple);
-    border: 2px solid var(--primary-purple);
+    background: transparent;
+    color: #0A66C2;
+    border: 1.5px solid #0A66C2;
 }
-.btn--ghost:hover {
-    background: var(--primary-purple);
-    color: #fff;
-    transform: translateY(-2px);
+.btn--ghost:hover,
+.btn--ghost:focus-visible {
+    background: #0A66C2;
+    color: #ffffff;
+    border-color: #0A66C2;
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 10px 20px rgba(10, 102, 194, 0.22);
 }
 
 .hero-social-proof {
@@ -4286,17 +4265,6 @@ section#process.slab {
         opacity: 1 !important;
         margin: 0 !important;
         letter-spacing: 0.02em;
-    }
-
-    /* LinkedIn link sits centered below the photo on mobile (the card has
-       padding:0 here and profile-meta overlays the photo absolutely, so
-       the link is the next flow child after the photo). */
-    .profile-linkedin {
-        margin: 0.9rem auto 0;
-        padding: 0;
-        font-size: 0.8rem;
-        justify-content: center;
-        width: fit-content;
     }
 
     /* Content: centered headline, left-aligned body for readability */
