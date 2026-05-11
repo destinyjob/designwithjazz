@@ -2441,16 +2441,41 @@ body.modal-open {
 
 .btn--ghost {
     background: transparent;
-    color: #0A66C2;
-    border: 1.5px solid #0A66C2;
+    color: var(--primary-purple);
+    border: 1.5px solid var(--primary-purple);
 }
 .btn--ghost:hover,
 .btn--ghost:focus-visible {
+    background: #000000;
+    color: #ffffff;
+    border-color: #000000;
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.18);
+}
+
+.btn--linkedin {
+    background: transparent;
+    color: #0A66C2;
+    border: 1.5px solid #0A66C2;
+}
+.btn--linkedin:hover,
+.btn--linkedin:focus-visible {
     background: #0A66C2;
     color: #ffffff;
     border-color: #0A66C2;
     transform: translateY(-2px) scale(1.02);
     box-shadow: 0 10px 20px rgba(10, 102, 194, 0.22);
+}
+
+/* Founder note CTA row: two buttons side-by-side on desktop, full-width
+   stacked on mobile (matches hero mobile button treatment for visual
+   consistency). inline-flex on desktop so the row sits flush-left under
+   the body copy in left-aligned content. */
+.founder-cta-row {
+    margin-top: 2rem;
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 12px;
 }
 
 .hero-social-proof {
@@ -3890,6 +3915,24 @@ section#process.slab {
         width: 100% !important;
     }
     .hero-btns .btn {
+        width: 100% !important;
+        justify-content: center !important;
+        padding: 16px 22px !important;
+        font-size: 1rem !important;
+        border-radius: 14px !important;
+    }
+    /* Match hero pattern: founder-note CTAs stack full-width on mobile
+       so the narrower LinkedIn button doesn't read as off-center next
+       to the wider Grab button. */
+    .founder-cta-row {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 0.7rem !important;
+        width: 100% !important;
+        margin-top: 1.5rem !important;
+    }
+    .founder-cta-row .btn {
         width: 100% !important;
         justify-content: center !important;
         padding: 16px 22px !important;
